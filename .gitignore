@@ -1,0 +1,19 @@
+# User requested ignores
+claire-hello-world/
+github-repos/
+
+# Standard OpenClaw ignores
+.env
+.clawhub/
+config/
+bin/
+docs/
+scripts/
+
+# System ignores
+.DS_Store
+node_modules/
+dist/
+build/
+*.log
+*.tmp
