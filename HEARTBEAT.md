@@ -25,4 +25,4 @@ Review your recently completed cron jobs and tasks, and write a brief AAR for an
 3. Save to `memory/AAR/YYYY-MM-DD_AAR-<job-name>-<job.id>.md` with a tiny YAML header (title, date, task_id, agent, status, score 1-5)
 4. Mark it reviewed in `memory/aar-state.json` (track `lastChecked[job.id]`)
 5. If it failed or scored low (<3), alert Master Phil with a concise summary of the issue and your fix — no need for full AAR dump.
-
+6. Otherwise, if there are no new failures or unreviewed tasks, then no alerts are necessary

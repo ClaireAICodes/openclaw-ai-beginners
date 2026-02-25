@@ -2,6 +2,9 @@
 claire-hello-world/
 github-repos/
 
+# Nested skill repositories - ignore their .git folders
+skills/*/.git/
+
 # Standard OpenClaw ignores
 .env
 .clawhub/
