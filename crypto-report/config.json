@@ -1,0 +1,31 @@
+{
+  "TRACKED_ASSETS": [
+    "BTC",
+    "ETH",
+    "ADA",
+    "SOL",
+    "AVAX",
+    "DOT",
+    "LINK",
+    "UNI",
+    "AAVE",
+    "MKR"
+  ],
+  "VERDICT_WEIGHTS": {
+    "fundamentals": 0.30,
+    "technicals": 0.25,
+    "sentiment": 0.20,
+    "risks": 0.25
+  },
+  "VERDICT_THRESHOLDS": {
+    "BUY_SCORE_MIN": 7.0,
+    "SELL_SCORE_MAX": 3.0
+  },
+  "REPORT_FORMAT": "markdown",
+  "NEWS_RSS_FEEDS": [
+    "https://feeds.feedburner.com/CoinDesk",
+    "https://cointelegraph.com/rss"
+  ],
+  "ENABLE_TELEGRAM_NOTIFICATIONS": true,
+  "TELEGRAM_CHANNEL": "129156516"
+}

@@ -1,0 +1,98 @@
+# Crypto Daily Report Configuration
+# This file defines settings for the daily crypto summary report
+
+# Schedule - Cron expression for when to run (default: 6 AM UTC daily)
+CRON_SCHEDULE: "0 6 * * *"  # 6:00 AM UTC every day
+
+# Data collection settings
+MAX_NEWS_ARTICLES: 20
+MAX_ANALYSIS_PIECES: 15
+LOOKBACK_DAYS: 7  # How many days of historical data to analyze
+
+# Cryptocurrencies to track (focus on top market cap coins)
+TRACKED_ASSETS:
+  - BTC    # Bitcoin
+  - ETH    # Ethereum
+  - ADA    # Cardano
+  - SOL    # Solana
+  - AVAX   # Avalanche
+  - DOT    # Polkadot
+  - LINK   # Chainlink
+  - UNI    # Uniswap
+  - AAVE   # Aave
+  - MKR    # Maker
+
+# Data sources to query
+DATA_SOURCES:
+  - name: "news"
+    type: "web_search"
+    priority: 1
+    queries:
+      - "cryptocurrency market analysis today"
+      - "bitcoin technical analysis"
+      - "ethereum fundamentals 2026"
+      - "crypto sentiment analysis"
+      - "cryptocurrency regulatory news"
+      - "crypto whale movements"
+
+  - name: "institutional"
+    type: "web_search"
+    priority: 2
+    queries:
+      - "institutional crypto adoption 2026"
+      - "bitcoin ETF flows"
+      - "crypto institutional investment"
+      - "central bank digital currency"
+
+  - name: "technical"
+    type: "web_search"
+    priority: 2
+    queries:
+      - "cryptocurrency price resistance support"
+      - "Bitcoin RSI MACD analysis"
+      - "Ethereum on-chain metrics"
+      - "crypto trading volume analysis"
+
+  - name: "sentiment"
+    type: "web_search"
+    priority: 3
+    queries:
+      - "crypto fear and greed index"
+      - "social media crypto sentiment"
+      - "cryptocurrency Google trends"
+      - "crypto derivatives market"
+
+  - name: "risks"
+    type: "web_search"
+    priority: 3
+    queries:
+      - "cryptocurrency regulatory risks"
+      - "crypto exchange security"
+      - "stablecoin risks 2026"
+      - "crypto market manipulation"
+
+# Analysis thresholds
+VERDICT_THRESHOLDS:
+  BUY_SCORE_MIN: 7.0   # Minimum score out of 10 for Buy recommendation
+  SELL_SCORE_MAX: 3.0   # Maximum score out of 10 for Sell recommendation
+  HOLD_RANGE: [4.0, 6.0]  # Score range for Hold
+
+# Report settings
+REPORT_FORMAT: "markdown"  # markdown, json, or both
+OUTPUT_DIR: "/home/ubuntu/.openclaw/workspace/memory/crypto-reports"
+LOG_LEVEL: "INFO"  # DEBUG, INFO, WARNING, ERROR
+
+# Notification settings (optional)
+ENABLE_NOTIFICATIONS: false
+NOTIFICATION_CHANNEL: ""  # Channel ID for sending report summary
+
+# Model settings for analysis
+ANALYSIS_MODEL: "openrouter/stepfun/step-3.5-flash:free"  # Model to use for synthesis
+MAX_TOKENS_PER_SOURCE: 2000  # Limit token consumption per source
+
+# Advanced: Custom weighting for verdict calculation (must sum to 1.0)
+VERDICT_WEIGHTS:
+  fundamentals: 0.30
+  technicals: 0.25
+  sentiment: 0.20
+  risks: 0.25

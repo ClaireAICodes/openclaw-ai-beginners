@@ -2,13 +2,7 @@
 name: knowledge-management
 description: Organize and classify OpenClaw knowledge entries into local folders by content type (Research, Decision, Insight, Lesson, Pattern, Project, Reference, Tutorial).
 homepage: https://github.com/ClaireAICodes/openclaw-skill-knowledge-management
-metadata:
-  {
-    "openclaw": {
-      "emoji": "📚",
-      "bins": ["km"]
-    }
-  }
+metadata: { "openclaw": { "emoji": "📚", "requires": { "bins": ["km"] } } }
 ---
 
 # Knowledge Management Skill (Local Storage)
