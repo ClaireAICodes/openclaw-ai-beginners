@@ -12,9 +12,10 @@ import json
 import logging
 import urllib.request
 import urllib.error
+import urllib.parse
 import time
 import random
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 from statistics import mean
@@ -128,49 +129,129 @@ def get_fear_greed() -> Dict[str, Any]:
     return data['data'][0] if data.get('data') else {}
 
 def get_btc_onchain() -> Dict[str, Any]:
-    """Fetch Bitcoin on-chain metrics with multiple fallbacks."""
-    metrics = {}
-    
-    # Primary: Blockchair (reliable, returns JSON)
-    try:
-        data = fetch_json("https://api.blockchair.com/bitcoin/stats")
-        if data and data.get('data'):
-            stats = data['data']
-            difficulty = stats.get('difficulty')
-            if difficulty:
-                # HashRate (TH/s) = Difficulty * 2^32 / (600 seconds) / 1e12
-                hash_rate = (difficulty * (2**32)) / 600 / 1e12
-                metrics['hash_rate'] = round(hash_rate, 2)
-            # Additional metrics
-            metrics['tx_count_24h'] = stats.get('transactions_24h')
-            metrics['avg_fee_24h'] = stats.get('average_transaction_fee_24h')
-    except Exception as e:
-        logger.warning(f"Blockchair failed: {e}")
-    
-    # Fallback: blockchain.info
+    """Fetch Bitcoin on-chain metrics. Try blockchain.info first, then Blockchair, then CoinGecko."""
+    result = {}
+    block_height = None
+
+    # Primary: blockchain.info (usually allows CORS)
     try:
         data = fetch_json("https://blockchain.info/stats?cors=true")
         if data and isinstance(data, dict):
-            hr = data.get('hash_rate') or data.get('hash_rate_terahash_per_second')
-            if hr:
-                metrics['hash_rate'] = hr
+            # blockchain.info uses 'hash_rate' (TH/s) or 'hash_rate_terahash_per_second'
+            hash_rate = data.get('hash_rate') or data.get('hash_rate_terahash_per_second')
+            if hash_rate:
+                result['hash_rate'] = hash_rate
+            block_height = data.get('totalbc')  # total blocks
     except Exception as e:
         logger.warning(f"blockchain.info failed: {e}")
-    
-    # Fallback: CoinGecko coin details
-    try:
-        data = fetch_json("https://api.coingecko.com/api/v3/coins/bitcoin")
-        if data.get('block_time_in_minutes'):
-            metrics['block_time'] = data['block_time_in_minutes']
-    except Exception as e:
-        logger.warning(f"CoinGecko coin details failed: {e}")
-    
-    return metrics
+
+    # Secondary: Blockchair (returns difficulty, compute hash rate)
+    if not result.get('hash_rate'):
+        try:
+            data = fetch_json("https://api.blockchair.com/bitcoin/stats")
+            if data and isinstance(data, dict):
+                d = data.get('data', {})
+                difficulty = d.get('difficulty')
+                if difficulty:
+                    hash_rate = (difficulty * (2**32)) / 600 / 1e12
+                    result['hash_rate'] = hash_rate
+                    result['difficulty'] = difficulty
+                if block_height is None:  # if not already set from blockchain.info
+                    block_height = d.get('blocks')
+                # Miner revenue metrics (USD)
+                inflation_usd = d.get('inflation_usd_24h')  # new BTC minted value
+                fees_usd = d.get('mempool_total_fee_usd')  # 24h total fees
+                if inflation_usd is not None and fees_usd is not None:
+                    result['miner_revenue_usd'] = inflation_usd + fees_usd
+                    result['miner_reward_usd'] = inflation_usd
+                    result['total_fees_usd'] = fees_usd
+        except Exception as e:
+            logger.warning(f"Blockchair failed: {e}")
+
+    # Tertiary: CoinGecko includes some on-chain in coin details (no hash rate here, just fallback for block time)
+    if not result.get('hash_rate'):
+        try:
+            data = fetch_json("https://api.coingecko.com/api/v3/coins/bitcoin")
+            if data.get('block_time_in_minutes'):
+                result['block_time'] = data['block_time_in_minutes']
+        except Exception as e:
+            logger.warning(f"CoinGecko coin details failed: {e}")
+
+    # Compute halving info if we have block_height
+    if block_height:
+        # Known past halvings: {block_height: date_str}
+        known_halvings = {
+            210000: "2012-11-28",
+            420000: "2016-07-09",
+            630000: "2020-05-11",
+            840000: "2024-04-20"
+        }
+        # Find the most recent past halving
+        past = [h for h in known_halvings.keys() if h <= block_height]
+        if past:
+            last_halving_block = max(past)
+            last_halving_date_str = known_halvings[last_halving_block]
+            result['halving_last'] = last_halving_date_str
+            # Compute days since last halving
+            try:
+                last_dt = datetime.strptime(last_halving_date_str, '%Y-%m-%d')
+                days_since = (datetime.utcnow() - last_dt).days
+                result['halving_days_since'] = days_since
+            except Exception:
+                pass  # ignore date math errors
+        # Compute next halving estimate
+        interval = 210000
+        next_halving_height = ((block_height // interval) + 1) * interval
+        blocks_until = next_halving_height - block_height
+        if blocks_until > 0:
+            # 10 minutes per block = 600 seconds
+            estimated_seconds = blocks_until * 600
+            estimated_date = datetime.utcnow() + timedelta(seconds=estimated_seconds)
+            result['halving_next_estimate'] = estimated_date.strftime('%Y-%m-%d (estimated)')
+            # Compute days until next halving
+            days_until = (estimated_date - datetime.utcnow()).days
+            result['halving_days_until'] = days_until
+
+    return result
+
+
+def get_price_series(coin_id: str, days: int = 90, interval: str = 'daily') -> List[float]:
+    """Fetch closing prices from CoinGecko market_chart endpoint."""
+    url = f"https://api.coingecko.com/api/v3/coins/{coin_id}/market_chart?vs_currency=usd&days={days}&interval={interval}"
+    data = fetch_json(url)
+    if not data or 'prices' not in data:
+        return []
+    return [p[1] for p in data['prices']]
+
+def get_btc_long_term_closes(limit: int = 2000) -> List[float]:
+    """Fetch up to 2000 days of BTC daily closes from CryptoCompare (free, no key)."""
+    url = f"https://min-api.cryptocompare.com/data/v2/histoday?fsym=BTC&tsym=USD&limit={limit}"
+    data = fetch_json(url)
+    if not data or data.get('Response') != 'Success':
+        return []
+    hist = data.get('Data', {}).get('Data', [])
+    # Extract closing prices; hist is sorted oldest -> newest
+    closes = [float(point['close']) for point in hist if 'close' in point]
+    return closes
+
+
+def get_daily_volumes(coin_id: str, days: int = 30) -> List[float]:
+    """Fetch daily volumes from CoinGecko market_chart endpoint."""
+    url = f"https://api.coingecko.com/api/v3/coins/{coin_id}/market_chart?vs_currency=usd&days={days}&interval=daily"
+    data = fetch_json(url)
+    if not data or 'total_volumes' not in data:
+        return []
+    # total_volumes is list of [timestamp, volume]
+    return [v[1] for v in data['total_volumes']]
 
 def get_news_items(feeds: List[str], per_feed: int = 10) -> List[Dict[str, str]]:
     items = []
     for feed in feeds:
-        items.extend(fetch_rss(feed, max_items=per_feed))
+        feed_items = fetch_rss(feed, max_items=per_feed)
+        source = urllib.parse.urlparse(feed).netloc
+        for item in feed_items:
+            item['source'] = source
+        items.extend(feed_items)
     return items
 
 # Mapping from ticker symbols to CoinGecko IDs
@@ -189,19 +270,87 @@ COINGECKO_IDS = {
 
 # ============== Analytics ==============
 
-def calc_rsi(ohlc: List[List[float]], period: int = 14) -> Optional[float]:
-    if len(ohlc) < period + 1:
+def calc_rsi(data: List, period: int = 14) -> Optional[float]:
+    """Calculate RSI using Wilder's smoothing. Accepts either OHLC list or list of closing prices."""
+    if isinstance(data[0], list) and len(data[0]) >= 5:
+        closes = [c[4] for c in data]
+    else:
+        closes = data
+    if len(closes) < period + 1:
         return None
-    closes = [c[4] for c in ohlc]
     deltas = [closes[i] - closes[i-1] for i in range(1, len(closes))]
-    gains = [d if d > 0 else 0 for d in deltas[:period]]
-    losses = [-d if d < 0 else 0 for d in deltas[:period]]
-    avg_gain = mean(gains) if gains else 0
-    avg_loss = mean(losses) if losses else 0
+    gains = [d if d > 0 else 0 for d in deltas]
+    losses = [-d if d < 0 else 0 for d in deltas]
+    avg_gain = mean(gains[:period])
+    avg_loss = mean(losses[:period])
+    for i in range(period, len(deltas)):
+        avg_gain = (avg_gain * (period - 1) + gains[i]) / period
+        avg_loss = (avg_loss * (period - 1) + losses[i]) / period
     if avg_loss == 0:
         return 100.0
     rs = avg_gain / avg_loss
     return round(100.0 - (100.0 / (1.0 + rs)), 2)
+
+
+def calc_ema(data: List[float], period: int) -> Optional[float]:
+    """Calculate Exponential Moving Average."""
+    if len(data) < period:
+        return None
+    multiplier = 2.0 / (period + 1)
+    ema = mean(data[:period])
+    for price in data[period:]:
+        ema = (price - ema) * multiplier + ema
+    return round(ema, 2)
+
+def calc_macd(closes: List[float], fast: int = 12, slow: int = 26, signal: int = 9) -> Dict[str, Optional[float]]:
+    """
+    Calculate Percentage Price Oscillator (PPO) and signal/histogram.
+    PPO = (EMA_fast - EMA_slow) / EMA_slow * 100
+    Returns normalized values, easier for scoring and comparison across price levels.
+    """
+    if len(closes) < slow:
+        return {'macd': None, 'signal': None, 'histogram': None}
+
+    n = len(closes)
+    # EMA fast series
+    ema_fast = [None] * n
+    mult_f = 2.0 / (fast + 1)
+    seed_f = mean(closes[:fast])
+    for i in range(fast - 1, n):
+        if i == fast - 1:
+            ema_fast[i] = seed_f
+        else:
+            ema_fast[i] = (closes[i] - ema_fast[i-1]) * mult_f + ema_fast[i-1]
+
+    # EMA slow series
+    ema_slow = [None] * n
+    mult_s = 2.0 / (slow + 1)
+    seed_s = mean(closes[:slow])
+    for i in range(slow - 1, n):
+        if i == slow - 1:
+            ema_slow[i] = seed_s
+        else:
+            ema_slow[i] = (closes[i] - ema_slow[i-1]) * mult_s + ema_slow[i-1]
+
+    # PPO series = (EMA_fast - EMA_slow) / EMA_slow * 100
+    ppo_series = []
+    for i in range(n):
+        if ema_fast[i] is not None and ema_slow[i] is not None and ema_slow[i] != 0:
+            ppo = round(((ema_fast[i] - ema_slow[i]) / ema_slow[i]) * 100, 2)
+            ppo_series.append(ppo)
+        else:
+            ppo_series.append(None)
+
+    latest_ppo = ppo_series[-1] if ppo_series[-1] is not None else None
+
+    # Signal line: EMA of the PPO series (ignore None)
+    valid_series = [v for v in ppo_series if v is not None]
+    signal_line = calc_ema(valid_series, signal) if len(valid_series) >= signal else None
+
+    histogram = round(latest_ppo - signal_line, 2) if (latest_ppo is not None and signal_line is not None) else None
+
+    # Note: keys 'macd', 'signal', 'histogram' kept for backward compatibility; now contain PPO values.
+    return {'macd': latest_ppo, 'signal': signal_line, 'histogram': histogram}
 
 def analyze_news_sentiment(news: List[Dict[str, str]]) -> tuple[float, List[str], List[str]]:
     pos_words = ['bullish','rally','surge','gain','up','rise','growth','adoption','breakthrough','partnership','launch','success','strong','high','institutional','ETF','approval','lift','uptrend']
@@ -217,7 +366,12 @@ def analyze_news_sentiment(news: List[Dict[str, str]]) -> tuple[float, List[str]
     score = (pos_count - neg_count) / total if total > 0 else 0.0
     return round(score, 3), pos[:5], neg[:5]
 
-def assess_risk(news_sent: tuple, btc_dom: Optional[float]) -> tuple[float, List[str]]:
+def assess_risk(
+    news_sent: tuple,
+    btc_dom: Optional[float],
+    btc_price: Optional[float] = None,
+    wma_200: Optional[float] = None
+) -> tuple[float, List[str]]:
     score = 0.3
     factors = []
     sent_score, _, neg_kws = news_sent
@@ -235,41 +389,150 @@ def assess_risk(news_sent: tuple, btc_dom: Optional[float]) -> tuple[float, List
         score += 0.15
         factors.append(f"High BTC dominance ({btc_dom:.1f}%)")
 
+    # 200-week Moving Average risk factor: being far above adds risk
+    if btc_price is not None and wma_200 is not None and wma_200 > 0:
+        distance_pct = (btc_price - wma_200) / wma_200 * 100
+        if distance_pct > 100:
+            score += 0.5
+            factors.append(f"Price >100% above WMA200")
+        elif distance_pct > 50:
+            score += 0.3
+            factors.append(f"Price >50% above WMA200")
+        elif distance_pct > 30:
+            score += 0.2
+            factors.append(f"Price >30% above WMA200")
+
     return min(1.0, score), factors
 
-def compute_technical_score(rsi: Optional[float], trend: int, fng: int) -> tuple[float, str]:
+def compute_technical_score(
+    rsi: Optional[float],
+    trend: int,
+    fng: int,
+    ppo_hist: Optional[float] = None,
+    volume_ratio: Optional[float] = None
+) -> tuple[float, str]:
+    """
+    Compute technical score (0-10) from multiple signals.
+
+    Components (base 5.0, max swing ±5.0):
+    - RSI: ±1.0 (<30 oversold, >70 overbought)
+    - SMA30 Trend: ±1.0 (price above/below)
+    - PPO Histogram: ±1.5 scaled by magnitude (max at |hist|>=2%)
+    - Volume Confirmation: ±0.5 directional (high vol confirms trend, low vol penalizes)
+    - Fear & Greed: +1.0 (fear) / -1.5 (greed)
+
+    Returns (score, reasons_string)
+    """
     score = 5.0
     reasons = []
 
+    # RSI (±1.0)
     if rsi is not None:
         if rsi < 30:
-            score += 1.5
+            score += 1.0
             reasons.append(f"RSI oversold ({rsi})")
         elif rsi > 70:
-            score -= 1.5
+            score -= 1.0
             reasons.append(f"RSI overbought ({rsi})")
         else:
             reasons.append(f"RSI neutral ({rsi})")
 
+    # SMA30 trend (±1.0)
     if trend > 0:
         score += 1.0
-        reasons.append("Price > 7-day SMA")
+        reasons.append("Price > SMA30")
     elif trend < 0:
         score -= 1.0
-        reasons.append("Price < 7-day SMA")
+        reasons.append("Price < SMA30")
 
+    # PPO histogram (±1.5, scaled by magnitude)
+    if ppo_hist is not None:
+        if ppo_hist > 0:
+            points = min(1.5, 1.5 * min(abs(ppo_hist) / 2.0, 1.0))
+            score += points
+            reasons.append(f"PPO histogram +{ppo_hist:.2f}%")
+        elif ppo_hist < 0:
+            points = min(1.5, 1.5 * min(abs(ppo_hist) / 2.0, 1.0))
+            score -= points
+            reasons.append(f"PPO histogram {ppo_hist:.2f}%")
+
+    # Volume confirmation (±0.5, directional)
+    if volume_ratio is not None:
+        if volume_ratio > 1.5:
+            if trend > 0:
+                score += 0.5
+                reasons.append(f"Volume {volume_ratio:.1f}× MA (confirms uptrend)")
+            elif trend < 0:
+                score -= 0.5
+                reasons.append(f"Volume {volume_ratio:.1f}× MA (confirms downtrend)")
+        elif volume_ratio < 0.5:
+            score -= 0.5
+            reasons.append(f"Volume {volume_ratio:.1f}× MA (weak conviction)")
+
+    # Fear & Greed (+1.0 / -1.5)
     if fng <= 25:
         score += 1.0
-        reasons.append("Extreme fear")
+        reasons.append("Extreme fear (contrarian)")
     elif fng >= 75:
         score -= 1.5
-        reasons.append("Extreme greed")
+        reasons.append("Extreme greed (contrarian)")
 
     return max(0.0, min(10.0, score)), "; ".join(reasons)
 
-def compute_fundamentals_score(btc_hash_rate: Optional[float]) -> float:
-    # Placeholder: Could compare to historical average
-    return 5.0 if btc_hash_rate else 4.0
+def compute_fundamentals_score(onchain: Dict[str, Any]) -> float:
+    """
+    Weighted score (0-10) based on:
+    - Halving cycle phase (35%)
+    - Difficulty trend - 2w change % (35%)
+    - Hash rate momentum - 24h change % (15%)
+    - Miner revenue momentum - 24h change % (15%)
+    """
+    # 1) Halving phase (days_since)
+    days_since = onchain.get('halving_days_since')
+    if days_since is not None:
+        if days_since < 300:
+            s_halving = 9.0
+        elif days_since < 550:
+            s_halving = 7.0
+        elif days_since < 800:
+            s_halving = 4.0   # distribution/transition, somewhat bearish
+        else:
+            s_halving = 2.0   # deep bear
+    else:
+        s_halving = 5.0
+
+    # 2) Difficulty trend (% change)
+    diff_change = onchain.get('difficulty_change_pct')
+    if diff_change is not None:
+        s_diff = 5.0 + diff_change * 0.2
+        s_diff = max(0.0, min(10.0, s_diff))
+    else:
+        s_diff = 5.0
+
+    # 3) Hash rate momentum (% change)
+    hr_change = onchain.get('btc_hash_rate_change_24h')
+    if hr_change is not None:
+        s_hr = 5.0 + hr_change * 0.4
+        s_hr = max(0.0, min(10.0, s_hr))
+    else:
+        s_hr = 5.0
+
+    # 4) Miner revenue momentum (% change)
+    rev_change = onchain.get('miner_revenue_change_pct')
+    if rev_change is not None:
+        s_rev = 5.0 + rev_change * 0.2
+        s_rev = max(0.0, min(10.0, s_rev))
+    else:
+        s_rev = 5.0
+
+    # Weighted total
+    score = (
+        0.35 * s_halving +
+        0.35 * s_diff +
+        0.15 * s_hr +
+        0.15 * s_rev
+    )
+    return round(score, 2)
 
 def compute_sentiment_score(fng: int, news_sent: float) -> float:
     # FnG 0-100 -> 0-10, news -1..1 -> 0-10 (5 neutral)
@@ -316,6 +579,8 @@ def main():
         # Global market cap and volume are not available without extra call
         mcap = None
         vol = None
+        eth_dom = None
+        stable_dom = None
         assets = {}
         for c in coins:
             sym = c['symbol'].upper()
@@ -332,21 +597,85 @@ def main():
         # Fetch OHLC for BTC only (to avoid rate limits; technicals use BTC as proxy)
         # Other assets will show N/A for RSI/trend in report (acceptable given rate constraints)
         time.sleep(2)  # Rate limit mitigation
+        # 2. Global market metrics (BTC/ETH/Stable dominance, total mcap/vol)
+        time.sleep(2)  # Rate limit mitigation
+        logger.info("Attempting to fetch global market metrics...")
+        try:
+            global_data = get_global_market()
+            # Use market_cap_percentage for real dominance numbers
+            mc_pct = global_data.get('market_cap_percentage', {})
+            btc_dom_global = mc_pct.get('btc')
+            eth_dom_global = mc_pct.get('eth')
+            # Sum major stablecoins (USDT, USDC, BUSD, DAI, etc.)
+            stable_pct = mc_pct.get('usdt', 0) + mc_pct.get('usdc', 0) + mc_pct.get('busd', 0) + mc_pct.get('dai', 0)
+            mcap = global_data.get('total_market_cap', {}).get('usd')
+            vol = global_data.get('total_volume', {}).get('usd')
+            if btc_dom_global is not None:
+                btc_dom = btc_dom_global
+            if eth_dom_global is not None:
+                eth_dom = eth_dom_global
+            if stable_pct > 0:
+                stable_dom = stable_pct
+            logger.info(f"Global market data: BTC dom {btc_dom:.1f}%, ETH dom {eth_dom if eth_dom is not None else 'N/A'}%, Stablecoins {stable_dom if stable_dom is not None else 'N/A'}%")
+        except Exception as e:
+            logger.warning(f"Global market fetch failed: {e}. Using computed BTC dominance from tracked assets; ETH/stables will be N/A.")
+            if btc_dom is None and total_mcap_tracked > 0:
+                btc_asset = assets.get('BTC')
+                if btc_asset:
+                    btc_dom = (btc_asset.get('market_cap', 0) / total_mcap_tracked) * 100
+
+        # 3. Fetch BTC technical data
+        time.sleep(2)  # Rate limit mitigation
         if 'BTC' in assets:
             try:
-                logger.info("Fetching BTC OHLC for RSI calculation...")
+                logger.info("Fetching BTC daily closes for technical indicators...")
                 btc_id = COINGECKO_IDS['BTC']
-                ohlc = get_coin_ohlc(btc_id, days=7)
-                btc_rsi = calc_rsi(ohlc)
-                assets['BTC']['rsi'] = btc_rsi
-                if ohlc:
-                    closes = [x[4] for x in ohlc]
-                    sma = mean(closes) if closes else None
-                    current = closes[-1] if closes else None
-                    assets['BTC']['sma_7'] = sma
-                    assets['BTC']['trend'] = 1 if (sma and current and current > sma) else -1 if (sma and current and current < sma) else 0
+                # Daily closes (90 days) for RSI, MACD, SMA30, volume
+                closes_daily = get_price_series(btc_id, days=90, interval='daily')
+                if not closes_daily or len(closes_daily) < 15:
+                    logger.warning(f"Insufficient daily data for BTC: got {len(closes_daily) if closes_daily else 0} points")
+                else:
+                    btc_rsi = calc_rsi(closes_daily)
+                    assets['BTC']['rsi'] = btc_rsi
+                    sma_30 = mean(closes_daily[-30:]) if len(closes_daily) >= 30 else (mean(closes_daily) if closes_daily else None)
+                    current = closes_daily[-1]
+                    assets['BTC']['sma_30'] = sma_30
+                    assets['BTC']['trend'] = 1 if (sma_30 and current > sma_30) else -1 if (sma_30 and current < sma_30) else 0
+                    # MACD (12/26/9) - uses daily closes
+                    macd_data = calc_macd(closes_daily)
+                    assets['BTC']['macd'] = macd_data.get('macd')
+                    assets['BTC']['macd_signal'] = macd_data.get('signal')
+                    assets['BTC']['macd_hist'] = macd_data.get('histogram')
+                    # Volume: fetch last 30 days of daily volumes and compute 30‑day MA
+                    volumes = get_daily_volumes(btc_id, days=30)
+                    if volumes:
+                        vol_ma = mean(volumes[-30:]) if len(volumes) >= 30 else (mean(volumes) if volumes else None)
+                        assets['BTC']['volume_ma'] = vol_ma
+                    # 200-week Moving Average (long-term risk metric) - fetch ~2000 daily closes from CryptoCompare
+                    time.sleep(2)  # additional rate limit mitigation
+                    try:
+                        closes_long = get_btc_long_term_closes(limit=2000)
+                        # Need at least 200 weeks of data; 200 weeks ~ 1400 days
+                        if closes_long and len(closes_long) >= 1400:
+                            wma_200 = mean(closes_long[-1400:])
+                            assets['BTC']['wma_200'] = wma_200
+                            logger.info(f"WMA200 (200w): ${wma_200:,.2f}")
+                        elif closes_long and len(closes_long) >= 200:
+                            # Fallback: if we have at least 200 days, compute shorter average and label accordingly
+                            wma_200 = mean(closes_long[-200:])
+                            assets['BTC']['wma_200'] = wma_200
+                            logger.info(f"WMA200 (limited): ${wma_200:,.2f} (based on {len(closes_long)} days)")
+                        else:
+                            logger.warning(f"Insufficient long-term data for WMA200: got {len(closes_long) if closes_long else 0} points")
+                    except Exception as e:
+                        logger.warning(f"Failed to fetch long-term closes for WMA200: {e}")
+                    trend_str = 'up' if assets['BTC']['trend'] > 0 else 'down' if assets['BTC']['trend'] < 0 else 'flat'
+                    macd_val = assets['BTC'].get('macd')
+                    macd_str = f"{macd_val:.2f}" if macd_val is not None else 'N/A'
+                    wma200_val = assets['BTC'].get('wma_200')
+                    logger.info(f"BTC technicals: RSI={btc_rsi:.1f}, SMA30=${sma_30:,.2f}, trend={trend_str}, PPO={macd_str}" + (f", WMA200=${wma200_val:,.2f}" if wma200_val else ""))
             except Exception as e:
-                logger.warning(f"OHLC for BTC failed: {e}")
+                logger.warning(f"Daily close fetch for BTC failed: {e}")
 
         # 3. Fear & Greed
         time.sleep(2)  # Rate limit mitigation
@@ -370,14 +699,31 @@ def main():
         news_sent_0_10 = round(5 + (news_sent * 5), 2)
 
         # 6. Scores
-        fundamentals_score = compute_fundamentals_score(btc_hash)
+        fundamentals_score = compute_fundamentals_score(btc_onchain)
         sentiment_score = compute_sentiment_score(fng_val, news_sent)
-        risk_score, risk_factors = assess_risk((news_sent, pos_kw, neg_kw), btc_dom)
-        risks_adj_score = round(10.0 - (risk_score * 10), 2)
 
         # Technicals from BTC representative
         btc = assets.get('BTC', {})
-        tech_score, tech_rationale = compute_technical_score(btc.get('rsi'), btc.get('trend', 0), fng_val)
+        # Compute volume ratio (24h volume / 30-day MA)
+        vol = btc.get('volume_24h')
+        vol_ma = btc.get('volume_ma')
+        volume_ratio = (vol / vol_ma) if (vol is not None and vol_ma is not None and vol_ma > 0) else None
+        tech_score, tech_rationale = compute_technical_score(
+            rsi=btc.get('rsi'),
+            trend=btc.get('trend', 0),
+            fng=fng_val,
+            ppo_hist=btc.get('macd_hist'),
+            volume_ratio=volume_ratio
+        )
+
+        # Risk assessment (needs btc price and 200W SMA)
+        risk_score, risk_factors = assess_risk(
+            (news_sent, pos_kw, neg_kw),
+            btc_dom,
+            btc_price=btc.get('price'),
+            wma_200=btc.get('wma_200')
+        )
+        risks_adj_score = round(10.0 - (risk_score * 10), 2)
 
         # Weighted total
         w = config['VERDICT_WEIGHTS']
@@ -390,8 +736,83 @@ def main():
 
         verdict, verdict_rationale = compute_verdict(weighted, config['VERDICT_THRESHOLDS'])
 
-        # 7. Build report data
+        # Build report data
         report_date = datetime.now().strftime('%Y-%m-%d')
+
+        # Track 24h hash rate change using local state file
+        state_file = ARTIFACTS_DIR / 'btc_hash_state.json'
+        prev_hash_rate = None
+        if state_file.exists():
+            try:
+                with open(state_file) as f:
+                    state = json.load(f)
+                prev_hash_rate = state.get('hash_rate')
+            except Exception as e:
+                logger.warning(f"Failed to read hash rate state: {e}")
+
+        hash_rate_change_24h = None
+        if btc_hash is not None and prev_hash_rate is not None and prev_hash_rate > 0:
+            hash_rate_change_24h = (btc_hash - prev_hash_rate) / prev_hash_rate * 100
+
+        # Save current state for next day
+        if btc_hash is not None:
+            try:
+                state = {'date': report_date, 'hash_rate': btc_hash}
+                with open(state_file, 'w') as f:
+                    json.dump(state, f, indent=2)
+            except Exception as e:
+                logger.warning(f"Failed to write hash rate state: {e}")
+
+        # Track difficulty change over ~2 weeks (retarget period)
+        difficulty_state_file = ARTIFACTS_DIR / 'btc_difficulty_state.json'
+        prev_difficulty = None
+        if difficulty_state_file.exists():
+            try:
+                with open(difficulty_state_file) as f:
+                    state = json.load(f)
+                prev_difficulty = state.get('difficulty')
+            except Exception as e:
+                logger.warning(f"Failed to read difficulty state: {e}")
+
+        difficulty_change_pct = None
+        current_difficulty = btc_onchain.get('difficulty')
+        if current_difficulty is not None and prev_difficulty is not None and prev_difficulty > 0:
+            difficulty_change_pct = (current_difficulty - prev_difficulty) / prev_difficulty * 100
+
+        # Save current difficulty for next comparison
+        if current_difficulty is not None:
+            try:
+                state = {'date': report_date, 'difficulty': current_difficulty}
+                with open(difficulty_state_file, 'w') as f:
+                    json.dump(state, f, indent=2)
+            except Exception as e:
+                logger.warning(f"Failed to write difficulty state: {e}")
+
+        # Track miner revenue change (24h)
+        miner_rev_state_file = ARTIFACTS_DIR / 'btc_miner_rev_state.json'
+        prev_miner_rev = None
+        if miner_rev_state_file.exists():
+            try:
+                with open(miner_rev_state_file) as f:
+                    state = json.load(f)
+                prev_miner_rev = state.get('miner_revenue_usd')
+            except Exception as e:
+                logger.warning(f"Failed to read miner revenue state: {e}")
+
+        miner_rev_change_pct = None
+        current_miner_rev = btc_onchain.get('miner_revenue_usd')
+        if current_miner_rev is not None and prev_miner_rev is not None and prev_miner_rev > 0:
+            miner_rev_change_pct = (current_miner_rev - prev_miner_rev) / prev_miner_rev * 100
+
+        # Save current miner revenue for next comparison
+        if current_miner_rev is not None:
+            try:
+                state = {'date': report_date, 'miner_revenue_usd': current_miner_rev}
+                with open(miner_rev_state_file, 'w') as f:
+                    json.dump(state, f, indent=2)
+            except Exception as e:
+                logger.warning(f"Failed to write miner revenue state: {e}")
+
         report_data = {
             'date': report_date,
             'verdict': verdict,
@@ -414,14 +835,26 @@ def main():
                 'count': len(news),
                 'sentiment_score': news_sent,
                 'positive_keywords': pos_kw,
-                'negative_keywords': neg_kw
+                'negative_keywords': neg_kw,
+                'items': news[:5]  # top 5 most recent
             },
             'risks': {
                 'score': risk_score,
                 'factors': risk_factors
             },
             'onchain': {
-                'btc_hash_rate': btc_hash
+                'btc_hash_rate': btc_hash,
+                'btc_hash_rate_change_24h': hash_rate_change_24h,
+                'halving_last': btc_onchain.get('halving_last'),
+                'halving_next_estimate': btc_onchain.get('halving_next_estimate'),
+                'halving_days_since': btc_onchain.get('halving_days_since'),
+                'halving_days_until': btc_onchain.get('halving_days_until'),
+                'difficulty': current_difficulty,
+                'difficulty_change_pct': difficulty_change_pct,
+                'miner_revenue_usd': btc_onchain.get('miner_revenue_usd'),
+                'miner_revenue_change_pct': miner_rev_change_pct,
+                'total_fees_usd': btc_onchain.get('total_fees_usd'),
+                'miner_reward_usd': btc_onchain.get('miner_reward_usd')
             }
         }
 
@@ -447,7 +880,15 @@ def main():
             markdown_lines.append(f"- **24h Volume:** ${vol:,.0f}")
         if btc_dom:
             markdown_lines.append(f"- **BTC Dominance:** {btc_dom:.1f}%")
+        if eth_dom:
+            markdown_lines.append(f"- **ETH Dominance:** {eth_dom:.1f}%")
+        if stable_dom:
+            markdown_lines.append(f"- **Stablecoin Dominance:** {stable_dom:.1f}%")
         markdown_lines.append(f"- **Fear & Greed:** {fng_val} ({fng_lbl})")
+        # Add BTC hash rate 24h change if available
+        hash_change = report_data['onchain'].get('btc_hash_rate_change_24h')
+        if hash_change is not None:
+            markdown_lines.append(f"- **BTC Hash Rate 24h:** {hash_change:+.2f}%")
         markdown_lines.append(f"- **Assets analyzed:** {', '.join(config['TRACKED_ASSETS'])}")
         markdown_lines.extend(["", "## Score Breakdown", "", "| Dimension | Score | Weight | Weighted |", "|-----------|-------|--------|----------|"])
 
@@ -460,21 +901,139 @@ def main():
         markdown_lines.append(f"| **Total** | | **100%** | **{s['weighted_total']:.2f}** |")
 
         # Asset table
-        markdown_lines.extend(["", "## Asset Analysis", "", "| Symbol | Name | Price | 24h Change | RSI | Trend |", "|--------|------|-------|------------|-----|-------|"])
+        markdown_lines.extend(["", "## Asset Analysis", "", "| Symbol | Name | Price | 24h Change |", "|--------|------|-------|------------|"])
         for sym, a in assets.items():
             price = f"${a['price']:,.2f}" if a.get('price') else "N/A"
             change = f"{a.get('change_24h', 0):+.2f}%" if a.get('change_24h') is not None else "N/A"
-            rsi = f"{a.get('rsi'):.1f}" if a.get('rsi') else "N/A"
-            trend_val = a.get('trend', 0)
-            trend = "> SMA7" if trend_val > 0 else "< SMA7" if trend_val < 0 else "Flat"
-            markdown_lines.append(f"| {sym} | {a['name']} | {price} | {change} | {rsi} | {trend} |")
+            markdown_lines.append(f"| {sym} | {a['name']} | {price} | {change} |")
 
         # Fundamentals
+        # BTC Technical Indicators section
+        btc_tech = assets.get('BTC', {})
+        rsi_val = btc_tech.get('rsi')
+        sma_val = btc_tech.get('sma_30')
+        wma200_val = btc_tech.get('wma_200')
+        trend_val = btc_tech.get('trend', 0)
+        macd_val = btc_tech.get('macd')
+        macd_sig = btc_tech.get('macd_signal')
+        macd_hist = btc_tech.get('macd_hist')
+        markdown_lines.append("")
+        markdown_lines.append("## BTC Technical Indicators (Daily)")
+        markdown_lines.append("")
+        if rsi_val is not None:
+            markdown_lines.append(f"- **RSI:** {rsi_val:.1f}")
+        else:
+            markdown_lines.append("- **RSI:** N/A")
+        if sma_val is not None:
+            markdown_lines.append(f"- **SMA30:** ${sma_val:,.2f}")
+        else:
+            markdown_lines.append("- **SMA30:** N/A")
+        if wma200_val is not None:
+            markdown_lines.append(f"- **WMA200:** ${wma200_val:,.2f}")
+        else:
+            markdown_lines.append("- **WMA200:** N/A")
+        trend_str = "> SMA30" if trend_val > 0 else "< SMA30" if trend_val < 0 else "Flat"
+        markdown_lines.append(f"- **Trend:** {trend_str}")
+
+        # 24h price change and volume (from latest market data)
+        btc_price = btc_tech.get('price')
+        btc_change = btc_tech.get('change_24h')
+        btc_vol = btc_tech.get('volume_24h')
+        btc_vol_ma = btc_tech.get('volume_ma')
+        if btc_change is not None:
+            change_str = f"{btc_change:+.2f}%"
+            markdown_lines.append(f"- **24h Change:** {change_str}")
+        if btc_vol is not None:
+            markdown_lines.append(f"- **24h Volume:** ${btc_vol:,.0f}")
+        if btc_vol_ma is not None:
+            markdown_lines.append(f"- **Volume MA(30):** ${btc_vol_ma:,.0f}")
+
+        if macd_val is not None:
+            markdown_lines.append(f"- **PPO:** {macd_val:+.2f}%")
+            if macd_sig is not None:
+                markdown_lines.append(f"- **PPO Signal:** {macd_sig:+.2f}%")
+            if macd_hist is not None:
+                markdown_lines.append(f"- **PPO Histogram:** {macd_hist:+.2f}%")
+
+        # Generate brief analysis of BTC technicals
+        analysis = []
+        if rsi_val is not None:
+            if rsi_val < 30:
+                analysis.append("RSI indicates oversold conditions, potential bullish reversal")
+            elif rsi_val > 70:
+                analysis.append("RSI indicates overbought conditions, potential bearish reversal")
+            else:
+                analysis.append("RSI is neutral")
+        if macd_hist is not None:
+            if macd_hist > 0:
+                analysis.append("PPO above signal suggests bullish momentum")
+            else:
+                analysis.append("PPO below signal indicates bearish momentum")
+        if trend_val > 0:
+            analysis.append("Price above 30‑day SMA confirms uptrend")
+        elif trend_val < 0:
+            analysis.append("Price below 30‑day SMA confirms downtrend")
+        else:
+            analysis.append("Price is testing SMA")
+        if btc_vol is not None and btc_vol_ma is not None:
+            if btc_vol > btc_vol_ma * 1.2:
+                analysis.append("Current volume is significantly above average, strengthening the signal")
+        if analysis:
+            markdown_lines.append("**Analysis:** " + "; ".join(analysis) + ".")
+
+
+
         markdown_lines.extend(["", "## Fundamentals Overview", ""])
         if btc_hash:
-            markdown_lines.append(f"- **BTC Hash Rate:** {btc_hash:,.0f} TH/s")
+            change_str = f" (24h change: {hash_rate_change_24h:+.2f}%)" if hash_rate_change_24h is not None else ""
+            markdown_lines.append(f"- **BTC Hash Rate:** {btc_hash:,.0f} TH/s{change_str}")
         else:
             markdown_lines.append("- **BTC Hash Rate:** Data unavailable")
+        # Add halving dates
+        halving_last = report_data.get('onchain', {}).get('halving_last')
+        halving_next = report_data.get('onchain', {}).get('halving_next_estimate')
+        halving_days_since = report_data.get('onchain', {}).get('halving_days_since')
+        halving_days_until = report_data.get('onchain', {}).get('halving_days_until')
+        if halving_last:
+            if halving_days_since is not None:
+                markdown_lines.append(f"- **Last BTC Halving:** {halving_last} ({halving_days_since} days ago)")
+            else:
+                markdown_lines.append(f"- **Last BTC Halving:** {halving_last}")
+        if halving_next:
+            if halving_days_until is not None:
+                markdown_lines.append(f"- **Next BTC Halving (Estimated):** {halving_next} — in {halving_days_until} days")
+            else:
+                markdown_lines.append(f"- **Next BTC Halving (Estimated):** {halving_next}")
+        # Add halving cycle phase interpretation
+        if halving_days_since is not None:
+            ds = halving_days_since
+            if ds < 300:
+                phase = "Early Post-Halving (Bullish Phase)"
+            elif ds < 550:
+                phase = "Mid Post-Halving (Peak Bullish)"
+            else:
+                phase = "Late Post-Halving (Distribution/Bear Risk)"
+            markdown_lines.append(f"- **Halving Cycle Phase:** {phase}")
+        # Add miner revenue and difficulty metrics
+        miner_rev = report_data.get('onchain', {}).get('miner_revenue_usd')
+        miner_rev_change = report_data.get('onchain', {}).get('miner_revenue_change_pct')
+        fees = report_data.get('onchain', {}).get('total_fees_usd')
+        diff = report_data.get('onchain', {}).get('difficulty')
+        diff_change = report_data.get('onchain', {}).get('difficulty_change_pct')
+        if miner_rev is not None:
+            rev_str = f"${miner_rev:,.0f}"
+            if miner_rev_change is not None:
+                rev_str += f" (24h change: {miner_rev_change:+.2f}%)"
+            if fees is not None and fees > 0:
+                fee_pct = (fees / miner_rev) * 100
+                markdown_lines.append(f"- **Miner Revenue (24h):** {rev_str} (fees: ${fees:,.0f}, {fee_pct:.1f}% of revenue)")
+            else:
+                markdown_lines.append(f"- **Miner Revenue (24h):** {rev_str}")
+        if diff is not None:
+            diff_str = f"{diff:,.0f}"
+            if diff_change is not None:
+                diff_str += f" (2w change: {diff_change:+.2f}%)"
+            markdown_lines.append(f"- **Network Difficulty:** {diff_str}")
         markdown_lines.append("- *More detailed on-chain metrics require premium data sources*")
 
         # Sentiment
@@ -483,6 +1042,16 @@ def main():
         markdown_lines.append(f"- **News Sentiment Score:** {news_sent:.3f} (-1 to +1)")
         markdown_lines.append(f"  - Positive keywords: {', '.join(pos_kw) if pos_kw else 'None'}")
         markdown_lines.append(f"  - Negative keywords: {', '.join(neg_kw) if neg_kw else 'None'}")
+
+        # Top news stories
+        top_news = report_data.get('news', {}).get('items', [])
+        if top_news:
+            markdown_lines.extend(["", "## Top Headlines", ""])
+            for item in top_news:
+                title = item.get('title', 'No title')
+                link = item.get('link', '#')
+                source = item.get('source', 'Unknown')
+                markdown_lines.append(f"- [{title}]({link}) — {source}")
 
         # Risks
         markdown_lines.extend(["", "## Risk Assessment", ""])
@@ -500,8 +1069,9 @@ def main():
 
         # Methodology
         markdown_lines.extend(["", "## Methodology Notes", "",
-            "- Data sources: CoinGecko API, Alternative.me, Blockchain.info, RSS news feeds.",
-            "- Technical indicators: RSI (14-day), 7-day Simple Moving Average.",
+            "- Data sources: CoinGecko API, Alternative.me, Blockchair, RSS news feeds.",
+            "- Technical indicators: RSI (14-day), 30-day SMA, PPO (12/26/9), 30-day Volume MA.",
+            "- Technical score: weighted combination of RSI, trend, PPO histogram, volume confirmation, and Fear & Greed (0-10 scale).",
             "- Sentiment: Simple keyword-based analysis of recent news headlines.",
             "- Risk assessment: Aggregates negative news keywords, regulatory mentions, BTC dominance.",
             "- **Not financial advice** - for informational purposes only.",

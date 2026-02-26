@@ -5,74 +5,105 @@
 ## Executive Summary
 
 **Market Verdict: HOLD**
-**Confidence Score: 4.02/10**
+**Confidence Score: 4.41/10**
 
 ### Key Highlights
 
-- **Global Market Cap:** $2,444,165,052,261
-- **24h Volume:** $137,612,260,104
-- **BTC Dominance:** 80.6%
+- **Global Market Cap:** $2,391,487,563,005
+- **24h Volume:** $55,923,498,958
+- **BTC Dominance:** 56.0%
+- **ETH Dominance:** 10.2%
+- **Stablecoin Dominance:** 10.8%
 - **Fear & Greed:** 11 (Extreme Fear)
+- **BTC Hash Rate 24h:** +0.00%
 - **Assets analyzed:** BTC, ETH, ADA, SOL, AVAX, DOT, LINK, UNI, AAVE, MKR
 
 ## Score Breakdown
 
 | Dimension | Score | Weight | Weighted |
 |-----------|-------|--------|----------|
-| Fundamentals | 5.0/10 | 30% | 1.50 |
-| Technicals | 7.0/10 | 25% | 1.75 |
-| Sentiment | 1.99/10 | 20% | 0.40 |
-| Risks_adjusted | 1.5/10 | 25% | 0.38 |
-| **Total** | | **100%** | **4.02** |
+| Fundamentals | 4.65/10 | 30% | 1.40 |
+| Technicals | 5.57/10 | 25% | 1.39 |
+| Sentiment | 1.86/10 | 20% | 0.37 |
+| Risks_adjusted | 5.0/10 | 25% | 1.25 |
+| **Total** | | **100%** | **4.41** |
 
 ## Asset Analysis
 
-| Symbol | Name | Price | 24h Change | RSI | Trend |
-|--------|------|-------|------------|-----|-------|
-| BTC | Bitcoin | $68,689.00 | +4.82% | 64.5 | > SMA7 |
-| ETH | Ethereum | $2,077.15 | +8.76% | 68.4 | > SMA7 |
-| SOL | Solana | $88.83 | +7.98% | 71.0 | > SMA7 |
-| ADA | Cardano | $0.30 | +11.86% | N/A | Flat |
-| LINK | Chainlink | $9.31 | +9.15% | N/A | Flat |
-| AVAX | Avalanche | $9.52 | +11.27% | N/A | Flat |
-| DOT | Polkadot | $1.62 | +26.72% | N/A | Flat |
-| UNI | Uniswap | $4.05 | +15.89% | N/A | Flat |
-| AAVE | Aave | $119.16 | +0.65% | N/A | Flat |
-| MKR | Maker | $1,676.43 | +5.70% | N/A | Flat |
+| Symbol | Name | Price | 24h Change |
+|--------|------|-------|------------|
+| BTC | Bitcoin | $67,108.00 | -1.18% |
+| ETH | Ethereum | $2,014.62 | -0.78% |
+| SOL | Solana | $85.62 | -1.81% |
+| ADA | Cardano | $0.29 | -1.71% |
+| LINK | Chainlink | $9.03 | -3.81% |
+| AVAX | Avalanche | $9.23 | -4.64% |
+| DOT | Polkadot | $1.56 | +2.27% |
+| UNI | Uniswap | $3.77 | -5.51% |
+| AAVE | Aave | $114.21 | -5.98% |
+| MKR | Maker | $1,628.59 | -0.92% |
+
+## BTC Technical Indicators (Daily)
+
+- **RSI:** 40.9
+- **SMA30:** $71,021.24
+- **WMA200:** $58,417.63
+- **Trend:** < SMA30
+- **24h Change:** -1.18%
+- **24h Volume:** $55,923,498,958
+- **Volume MA(30):** $57,632,938,932
+- **PPO:** -4.67%
+- **PPO Signal:** -5.43%
+- **PPO Histogram:** +0.76%
+**Analysis:** RSI is neutral; PPO above signal suggests bullish momentum; Price below 30‑day SMA confirms downtrend.
 
 ## Fundamentals Overview
 
-- **BTC Hash Rate:** 1,033,644,020 TH/s
+- **BTC Hash Rate:** 1,033,644,020 TH/s (24h change: +0.00%)
+- **Last BTC Halving:** 2024-04-20 (677 days ago)
+- **Next BTC Halving (Estimated):** 2028-04-11 (estimated) — in 774 days
+- **Halving Cycle Phase:** Late Post-Halving (Distribution/Bear Risk)
+- **Miner Revenue (24h):** $30,626,951 (24h change: -1.49%) (fees: $2,995, 0.0% of revenue)
+- **Network Difficulty:** 144,398,401,518,100 (2w change: +0.00%)
 - *More detailed on-chain metrics require premium data sources*
 
 ## Sentiment Analysis
 
 - **Fear & Greed Index:** 11 (Extreme Fear)
-- **News Sentiment Score:** -0.333 (-1 to +1)
-  - Positive keywords: gain, up, strong, institutional
-  - Negative keywords: fall, down, loss, sec, ban
+- **News Sentiment Score:** -0.400 (-1 to +1)
+  - Positive keywords: bullish, rally, gain, up, launch
+  - Negative keywords: crash, drop, fall, down, decline
+
+## Top Headlines
+
+- [Bitcoin briefly crashes below $48,000 on upstart exchange despite crypto rally](https://www.coindesk.com/markets/2026/02/26/bitcoin-briefly-crashes-below-usd48-000-on-upstart-exchange-despite-crypto-rally) — feeds.feedburner.com
+- [Crypto for Advisors: Crypto’s fixture in 401(k) plans](https://www.coindesk.com/coindesk-indices/2026/02/25/crypto-for-advisors-crypto-s-fixture-in-401-k-plans) — feeds.feedburner.com
+- [Bitcoin falls back below $67,000, rapidly giving back Wednesday's gains](https://www.coindesk.com/markets/2026/02/26/bitcoin-falls-back-below-usd67-000-rapidly-giving-back-wednesday-s-gains) — feeds.feedburner.com
+- [The Protocol: Blockchain sleuth ZachXBT alleges Axiom employee conducted insider trading](https://www.coindesk.com/tech/2026/02/26/the-protocol-blockchain-sleuth-zachxbt-alleges-axiom-employee-conducted-insider-trading) — feeds.feedburner.com
+- [Senate hearing for U.S. bank regulators thrusts crypto into starring role ](https://www.coindesk.com/policy/2026/02/26/senate-hearing-for-u-s-bank-regulators-thrusts-crypto-into-starring-role) — feeds.feedburner.com
 
 ## Risk Assessment
 
-**Overall Risk Score:** 0.850 / 1.0
+**Overall Risk Score:** 0.500 / 1.0
 
-**Risk Factors:** Negative news sentiment, Regulatory concerns, High BTC dominance (80.6%)
+**Risk Factors:** Negative news sentiment
 
 ## Verdict Rationale
 
-The **HOLD** recommendation is based on a weighted composite score of **4.02/10**.
+The **HOLD** recommendation is based on a weighted composite score of **4.41/10**.
 
-- **Technical factors:** RSI neutral (64.48); Price > 7-day SMA; Extreme fear.
+- **Technical factors:** RSI neutral (40.85); Price < SMA30; PPO histogram +0.76%; Extreme fear (contrarian).
 - **Sentiment:** Fear & Greed at 11 (Extreme Fear).
 - **News tone:** Negative.
-- **Risk factors:** 3 identified: Negative news sentiment; Regulatory concerns; High BTC dominance (80.6%).
+- **Risk factors:** 1 identified: Negative news sentiment.
 
 ## Methodology Notes
 
-- Data sources: CoinGecko API, Alternative.me, Blockchain.info, RSS news feeds.
-- Technical indicators: RSI (14-day), 7-day Simple Moving Average.
+- Data sources: CoinGecko API, Alternative.me, Blockchair, RSS news feeds.
+- Technical indicators: RSI (14-day), 30-day SMA, PPO (12/26/9), 30-day Volume MA.
+- Technical score: weighted combination of RSI, trend, PPO histogram, volume confirmation, and Fear & Greed (0-10 scale).
 - Sentiment: Simple keyword-based analysis of recent news headlines.
 - Risk assessment: Aggregates negative news keywords, regulatory mentions, BTC dominance.
 - **Not financial advice** - for informational purposes only.
 
-*Generated by Crypto Reporter v1.0 on 2026-02-26 04:51 UTC*
+*Generated by Crypto Reporter v1.0 on 2026-02-26 16:42 UTC*
