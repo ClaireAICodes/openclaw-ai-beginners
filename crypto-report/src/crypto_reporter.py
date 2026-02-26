@@ -372,7 +372,7 @@ def assess_risk(
     btc_price: Optional[float] = None,
     wma_200: Optional[float] = None
 ) -> tuple[float, List[str]]:
-    score = 0.3
+    score = 0.0
     factors = []
     sent_score, _, neg_kws = news_sent
 
