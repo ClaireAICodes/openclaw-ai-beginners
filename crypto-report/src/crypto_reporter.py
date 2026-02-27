@@ -371,38 +371,55 @@ def assess_risk(
     btc_dom: Optional[float],
     btc_price: Optional[float] = None,
     wma_200: Optional[float] = None
-) -> tuple[float, List[str]]:
+) -> tuple[float, List[str], List[tuple]]:
     score = 0.0
     factors = []
+    contributions = []  # (label, added_score)
     sent_score, _, neg_kws = news_sent
 
     if sent_score < -0.3:
-        score += 0.2
+        add = 0.2
+        score += add
         factors.append("Negative news sentiment")
+        contributions.append(("Negative news sentiment", add, f"sent_score={sent_score:.3f}"))
     if len(neg_kws) > 5:
-        score += 0.1
+        add = 0.1
+        score += add
         factors.append("Multiple negative keywords")
+        contributions.append(("Multiple negative keywords", add, f"count={len(neg_kws)}"))
     if any(k in " ".join(neg_kws) for k in ['regulation','sec','lawsuit','ban','compliance']):
-        score += 0.2
+        add = 0.2
+        score += add
         factors.append("Regulatory concerns")
-    if btc_dom and btc_dom > 65:
-        score += 0.15
+        contributions.append(("Regulatory concerns", add, "keywords detected"))
+    if btc_dom and btc_dom > 60:
+        add = 0.15
+        score += add
         factors.append(f"High BTC dominance ({btc_dom:.1f}%)")
+        contributions.append(("High BTC dominance", add, f"{btc_dom:.1f}%"))
 
     # 200-week Moving Average risk factor: being far above adds risk
+    wma200_dist = None
     if btc_price is not None and wma_200 is not None and wma_200 > 0:
         distance_pct = (btc_price - wma_200) / wma_200 * 100
+        wma200_dist = distance_pct
         if distance_pct > 100:
-            score += 0.5
+            add = 0.5
+            score += add
             factors.append(f"Price >100% above WMA200")
+            contributions.append(("WMA200 premium", add, f"+{distance_pct:.1f}%"))
         elif distance_pct > 50:
-            score += 0.3
+            add = 0.3
+            score += add
             factors.append(f"Price >50% above WMA200")
+            contributions.append(("WMA200 premium", add, f"+{distance_pct:.1f}%"))
         elif distance_pct > 30:
-            score += 0.2
+            add = 0.2
+            score += add
             factors.append(f"Price >30% above WMA200")
+            contributions.append(("WMA200 premium", add, f"+{distance_pct:.1f}%"))
 
-    return min(1.0, score), factors
+    return min(1.0, score), factors, contributions, wma200_dist
 
 def compute_technical_score(
     rsi: Optional[float],
@@ -717,7 +734,7 @@ def main():
         )
 
         # Risk assessment (needs btc price and 200W SMA)
-        risk_score, risk_factors = assess_risk(
+        risk_score, risk_factors, risk_contributions, wma200_dist = assess_risk(
             (news_sent, pos_kw, neg_kw),
             btc_dom,
             btc_price=btc.get('price'),
@@ -1053,11 +1070,29 @@ def main():
                 source = item.get('source', 'Unknown')
                 markdown_lines.append(f"- [{title}]({link}) — {source}")
 
-        # Risks
+        # Risks - more informative formatting
         markdown_lines.extend(["", "## Risk Assessment", ""])
         markdown_lines.append(f"**Overall Risk Score:** {risk_score:.3f} / 1.0")
+        markdown_lines.append(f"**Adjusted Score (inverted):** {risks_adj_score:.1f} / 10.0")
         markdown_lines.append("")
-        markdown_lines.append("**Risk Factors:** " + (", ".join(risk_factors) if risk_factors else "No significant risks detected"))
+        if risk_contributions:
+            markdown_lines.append("**Factor Breakdown:**")
+            for label, add, detail in risk_contributions:
+                markdown_lines.append(f"- {label}: +{add:.2f} ({detail})")
+            markdown_lines.append("")
+            # Show summary with total risk score
+            markdown_lines.append(f"**Total Risk Factors:** {len(risk_contributions)} contributing {risk_score:.3f} points.")
+        else:
+            markdown_lines.append("**No significant risk factors detected.**")
+            markdown_lines.append(f"Raw risk score: {risk_score:.3f} → Adjusted: {risks_adj_score:.1f}/10")
+        # Add contextual market risk indicators
+        markdown_lines.append("")
+        markdown_lines.append("**Context:**")
+        markdown_lines.append(f"- News sentiment score: {news_sent:.3f} (-1 to +1)")
+        if btc_dom:
+            markdown_lines.append(f"- BTC dominance: {btc_dom:.1f}%")
+        if wma200_dist is not None:
+            markdown_lines.append(f"- BTC price vs WMA200: {wma200_dist:+.1f}%")
 
         # Rationale
         markdown_lines.extend(["", "## Verdict Rationale", "", f"The **{verdict}** recommendation is based on a weighted composite score of **{report_data['confidence']}/10**."])

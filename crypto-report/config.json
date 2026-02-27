@@ -24,7 +24,8 @@
   "REPORT_FORMAT": "markdown",
   "NEWS_RSS_FEEDS": [
     "https://feeds.feedburner.com/CoinDesk",
-    "https://cointelegraph.com/rss"
+    "https://cointelegraph.com/rss",
+    "https://decrypt.co/feed"
   ],
   "ENABLE_TELEGRAM_NOTIFICATIONS": true,
   "TELEGRAM_CHANNEL": "129156516"
