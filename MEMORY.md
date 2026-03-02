@@ -69,38 +69,6 @@ gh repo edit <owner>/<repo> \
 
 **Applies to:** All public and private repositories created on behalf of Master Phil, including skills, tools, agents, and project code.
 
-
-### After Action Review (AAR) Framework
-Established: 2026-02-11
-Description: Mandatory continuous improvement framework triggered by significant task/project completion. Immediate structured reflection with 5 questions, rating system, and dual storage (local + Notion).
-
-Detailed framework is maintained in `AGENTS.md` and `AAR.md`.
-
-### OpenClaw Configuration Backup Protocol
-Established: 2026-02-15
-Description: Robust daily backup of all OpenClaw configuration and workspace data to Google Drive using a dedicated script with deduplication, cleanup, and reliable model routing.
-
-**Components:**
-- Backup script: `/home/ubuntu/.openclaw/workspace/backup-to-gdrive.sh`
-- Cron job: `Daily OpenClaw Configuration Backup` (ID: 43198751-737a-4aa7-8b7e-72893f5d93b6)
-- Destination: Google Drive folder "OpenClaw Backups/YYYY-MM-DD"
-- Model: `cloudflare-ai-gateway/claude-sonnet-4-5` (paid, reliable)
-
-**Coverage:**
-- Top-level files: `openclaw.json`, all workspace core markdown (AGENTS.md, SOUL.md, TOOLS.md, IDENTITY.md, USER.md, HEARTBEAT.md, MEMORY.md)
-- Directories: `workspace/memory`, `workspace/Research`, `workspace/bin`, `workspace/skills`, `agents`, `identity`, `cron`
-
-**Features:**
-- Deduplication of files and subfolders within each backup
-- Automatic cleanup of backups older than 30 days
-- Retry logic with exponential backoff for uploads
-- Telegram summary report with success/failure counts
-- Executed via `exec` tool by a dedicated isolated agent
-
-**Rationale:**
-The previous backup used free-tier models that were unreliable due to rate limits. Switching to a paid model with a robust external script ensures consistent, hands-off backups with full coverage and housekeeping.
-
-
 ## Lessons Learned
 
 ### Data Privacy (2026-02-11)
@@ -115,8 +83,8 @@ The previous backup used free-tier models that were unreliable due to rate limit
 - After any config modification, verify with `gateway config.get` that all expected sections are present.
 - **Enshrined in AGENTS.md** under "Configuration Management" section.
 
-### Model Selection Intelligence (2026-02-12)
-The free tier ecosystem in 2026 is production-capable; don't default to paid models without cost-benefit analysis. Step-3.5 Flash's 11B active tokens out of 196B total demonstrates MoE efficiency can match frontier performance at 5-19x lower cost. Multi-model routing is essential for agentic workflows that can consume 500K+ tokens per task. Always check OpenRouter's current rate limits for free tiers (as of July 2025: "low daily request limits unsuitable for production").
-
+**Resource References:**
+- All 25 research reports stored in `/home/ubuntu/.openclaw/workspace-kamiya/Research/OpenClaw Ideas/` with timestamps.
+- Full source URLs and detailed analysis preserved for future deep dives.
 
 ---
