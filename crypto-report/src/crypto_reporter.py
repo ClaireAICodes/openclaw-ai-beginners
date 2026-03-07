@@ -1183,7 +1183,7 @@ def main():
                     '<head>',
                     '  <style>',
                     '    body { font-family: Arial, sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; line-height: 1.6; }',
-                    '    .header { background: linear-gradient(135deg, #4a90e2, #357abd); color: white; padding: 25px; border-radius: 10px; margin-bottom: 25px; text-align: center; }',
+                    '    .header { background: linear-gradient(135deg, #4a90e2, #357abd); color: #1a1a1a; padding: 25px; border-radius: 10px; margin-bottom: 25px; text-align: center; }',
                     '    .verdict { font-size: 28px; font-weight: bold; margin: 10px 0; }',
                     '    .score { font-size: 20px; opacity: 0.9; }',
                     '    .section { margin: 25px 0; padding: 20px; background: #f9f9f9; border-radius: 8px; border-left: 4px solid #4a90e2; }',
