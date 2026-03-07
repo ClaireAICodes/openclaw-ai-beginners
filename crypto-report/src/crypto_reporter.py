@@ -1141,110 +1141,259 @@ def main():
         if config.get('ENABLE_EMAIL_NOTIFICATIONS'):
             try:
                 email_recipient = config.get('EMAIL_RECIPIENT')
-                email_sender = config.get('EMAIL_SENDER')
                 subject_prefix = config.get('EMAIL_SUBJECT_PREFIX', 'Crypto Report')
                 subject = f"{subject_prefix}: {verdict} (Score: {report_data['confidence']}/10) - {date_str}"
 
+                # Extract data
                 mcap_usd = global_data.get('total_market_cap', {}).get('usd', 0)
                 vol_usd = global_data.get('total_volume', {}).get('usd', 0)
                 s = report_data['scores']
                 weights = config['VERDICT_WEIGHTS']
                 risk_factors = report_data.get('risk_factors', [])
+                risk_score = report_data.get('risk_score', 0)
+                risks_adj_score = report_data.get('risks_adjusted', 10.0 - (risk_score * 10))
+                news_items = report_data.get('news', {}).get('items', [])
+                news_sent = report_data.get('news', {}).get('sentiment_score', 0)
+                pos_kw = report_data.get('news', {}).get('positive_keywords', [])
+                neg_kw = report_data.get('news', {}).get('negative_keywords', [])
 
+                # Build comprehensive HTML email
                 html_lines = [
                     '<!DOCTYPE html>',
                     '<html>',
                     '<head>',
                     '  <style>',
-                    '    body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }',
-                    '    .header { background: #4a90e2; color: white; padding: 15px; border-radius: 5px; margin-bottom: 20px; }',
-                    '    .verdict { font-size: 24px; font-weight: bold; margin: 10px 0; }',
-                    '    .score { font-size: 18px; color: #666; }',
-                    '    table { border-collapse: collapse; width: 100%; margin: 20px 0; }',
-                    '    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }',
-                    '    th { background-color: #f2f2f2; }',
-                    '    .positive { color: green; }',
-                    '    .negative { color: red; }',
-                    '    .section { margin: 25px 0; }',
-                    '    .section h2 { color: #4a90e2; border-bottom: 2px solid #4a90e2; padding-bottom: 5px; }',
+                    '    body { font-family: Arial, sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; line-height: 1.6; }',
+                    '    .header { background: linear-gradient(135deg, #4a90e2, #357abd); color: white; padding: 25px; border-radius: 10px; margin-bottom: 25px; text-align: center; }',
+                    '    .verdict { font-size: 28px; font-weight: bold; margin: 10px 0; }',
+                    '    .score { font-size: 20px; opacity: 0.9; }',
+                    '    .section { margin: 25px 0; padding: 20px; background: #f9f9f9; border-radius: 8px; border-left: 4px solid #4a90e2; }',
+                    '    .section h2 { color: #4a90e2; margin-top: 0; border-bottom: 2px solid #4a90e2; padding-bottom: 8px; }',
+                    '    table { border-collapse: collapse; width: 100%; margin: 15px 0; background: white; }',
+                    '    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; font-size: 14px; }',
+                    '    th { background-color: #4a90e2; color: white; font-weight: bold; }',
+                    '    .positive { color: #28a745; font-weight: bold; }',
+                    '    .negative { color: #dc3545; font-weight: bold; }',
+                    '    .neutral { color: #6c757d; }',
+                    '    .highlights { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 15px 0; }',
+                    '    .highlight { background: white; padding: 15px; border-radius: 8px; border: 1px solid #e0e0e0; }',
+                    '    .highlight strong { color: #4a90e2; }',
+                    '    .breakdown-table th { text-align: center; }',
+                    '    .breakdown-table .weighted { text-align: right; }',
+                    '    a { color: #4a90e2; text-decoration: none; }',
+                    '    a:hover { text-decoration: underline; }',
+                    '    .disclaimer { font-size: 12px; color: #666; border-top: 1px solid #ddd; padding-top: 15px; margin-top: 30px; }',
+                    '    .news-item { margin: 10px 0; padding: 10px; background: white; border-left: 3px solid #4a90e2; }',
+                    '    .news-title { font-weight: bold; }',
+                    '    .news-source { color: #666; font-size: 12px; margin-left: 10px; }',
                     '  </style>',
                     '</head>',
                     '<body>',
-                    '  <div class="header">',
-                    '    <h1>📊 Daily Cryptocurrency Market Report</h1>',
+                    f'  <div class="header">',
+                    f'    <h1>📊 Daily Cryptocurrency Market Report</h1>',
                     f'    <div class="verdict">Market Verdict: {verdict}</div>',
                     f'    <div class="score">Confidence Score: {report_data["confidence"]}/10</div>',
                     f'    <div>Report Date: {date_str}</div>',
                     '  </div>',
                     '',
                     '  <div class="section">',
-                    '    <h2>Overview</h2>',
-                    '    <ul>',
-                    f'      <li><strong>Global Market Cap:</strong> ${mcap_usd:,.0f}</li>',
-                    f'      <li><strong>24h Volume:</strong> ${vol_usd:,.0f}</li>',
-                    f'      <li><strong>BTC Dominance:</strong> {btc_dom:.1f}%</li>'
-                ]
-                if eth_dom is not None:
-                    html_lines.append(f'      <li><strong>ETH Dominance:</strong> {eth_dom:.1f}%</li>')
-                if stable_dom is not None:
-                    html_lines.append(f'      <li><strong>Stablecoin Dominance:</strong> {stable_dom:.1f}%</li>')
-                html_lines.extend([
-                    f'      <li><strong>Fear & Greed Index:</strong> {fng_val} ({fng_lbl})</li>',
-                    '    </ul>',
+                    '    <h2>📈 Key Highlights</h2>',
+                    '    <div class="highlights">',
+                    f'      <div class="highlight"><strong>Global Market Cap:</strong><br>${mcap_usd:,.0f}</div>',
+                    f'      <div class="highlight"><strong>24h Volume:</strong><br>${vol_usd:,.0f}</div>',
+                    f'      <div class="highlight"><strong>BTC Dominance:</strong><br>{btc_dom:.1f}%</div>',
+                    f'      <div class="highlight"><strong>ETH Dominance:</strong><br>{eth_dom if eth_dom is not None else "N/A"}%</div>',
+                    f'      <div class="highlight"><strong>Stablecoin Dom:</strong><br>{stable_dom if stable_dom is not None else "N/A"}%</div>',
+                    f'      <div class="highlight"><strong>Fear & Greed:</strong><br>{fng_val} ({fng_lbl})</div>',
+                    '    </div>',
                     '  </div>',
                     '',
                     '  <div class="section">',
-                    '    <h2>Score Breakdown</h2>',
-                    '    <table>',
+                    '    <h2>📊 Score Breakdown</h2>',
+                    '    <table class="breakdown-table">',
                     '      <tr><th>Dimension</th><th>Score</th><th>Weight</th><th>Weighted</th></tr>',
-                    f'      <tr><td>Fundamentals</td><td>{s["fundamentals"]}/10</td><td>30%</td><td>{weights.get("fundamentals",0.3)*s["fundamentals"]:.2f}</td></tr>',
-                    f'      <tr><td>Technicals</td><td>{s["technicals"]}/10</td><td>25%</td><td>{weights.get("technicals",0.25)*s["technicals"]:.2f}</td></tr>',
-                    f'      <tr><td>Sentiment</td><td>{s["sentiment"]}/10</td><td>20%</td><td>{weights.get("sentiment",0.2)*s["sentiment"]:.2f}</td></tr>',
-                    f'      <tr><td>Risks</td><td>{s["risks_adjusted"]}/10</td><td>25%</td><td>{weights.get("risks",0.25)*s["risks_adjusted"]:.2f}</td></tr>',
-                    f'      <tr><td colspan="3"><strong>Total</strong></td><td><strong>{s["weighted_total"]:.2f}</strong></td></tr>',
+                    f'      <tr><td>Fundamentals</td><td>{s["fundamentals"]}/10</td><td>30%</td><td class="weighted">{weights.get("fundamentals",0.3)*s["fundamentals"]:.2f}</td></tr>',
+                    f'      <tr><td>Technicals</td><td>{s["technicals"]}/10</td><td>25%</td><td class="weighted">{weights.get("technicals",0.25)*s["technicals"]:.2f}</td></tr>',
+                    f'      <tr><td>Sentiment</td><td>{s["sentiment"]}/10</td><td>20%</td><td class="weighted">{weights.get("sentiment",0.2)*s["sentiment"]:.2f}</td></tr>',
+                    f'      <tr><td>Risks (adj)</td><td>{s["risks_adjusted"]}/10</td><td>25%</td><td class="weighted">{weights.get("risks",0.25)*s["risks_adjusted"]:.2f}</td></tr>',
+                    f'      <tr><td colspan="3"><strong>Total</strong></td><td class="weighted"><strong>{s["weighted_total"]:.2f}</strong></td></tr>',
                     '    </table>',
                     '  </div>',
                     '',
                     '  <div class="section">',
-                    '    <h2>Top Assets</h2>',
+                    '    <h2>💰 Asset Analysis</h2>',
                     '    <table>',
-                    '      <tr><th>Symbol</th><th>Name</th><th>Price</th><th>24h Change</th></tr>'
-                ])
-                # Add top 5 asset rows
-                for sym, a in list(assets.items())[:5]:
+                    '      <tr><th>Symbol</th><th>Name</th><th>Price</th><th>24h Change</th><th>RSI</th><th>Trend</th></tr>',
+                ]
+
+                # Add all assets with their technical indicators if available
+                for sym, a in assets.items():
                     price = f"${a.get('price', 0):,.2f}" if a.get('price') else "N/A"
                     change = a.get('change_24h', 0)
-                    change_class = "positive" if change > 0 else "negative" if change < 0 else ""
-                    change_str = f"<span class='{change_class}'>{change:+.2f}%</span>" if change is not None else "N/A"
-                    html_lines.append(f'      <tr><td>{sym}</td><td>{a["name"]}</td><td>{price}</td><td>{change_str}</td></tr>')
+                    change_str = f'<span class="{"positive" if change > 0 else "negative" if change < 0 else "neutral"}">{change:+.2f}%</span>' if change is not None else "N/A"
+                    rsi = btc_tech.get('rsi') if sym == 'BTC' else a.get('rsi')
+                    rsi_str = f"{rsi:.1f}" if rsi is not None else "N/A"
+                    trend = btc_tech.get('trend', 0) if sym == 'BTC' else a.get('trend', 0)
+                    if sym == 'BTC' and btc_tech.get('trend') is not None:
+                        trend_val = btc_tech.get('trend', 0)
+                        trend_str = "> SMA30" if trend_val > 0 else "< SMA30" if trend_val < 0 else "Flat"
+                    else:
+                        trend_str = ">" if trend > 0 else "<" if trend < 0 else "Flat"
+                    html_lines.append(f'      <tr><td>{sym}</td><td>{a["name"]}</td><td>{price}</td><td>{change_str}</td><td>{rsi_str}</td><td>{trend_str}</td></tr>')
+
                 html_lines.extend([
                     '    </table>',
                     '  </div>',
                     '',
                     '  <div class="section">',
-                    '    <h2>Verdict Rationale</h2>',
-                    '    <p>',
-                    f'      The <strong>{verdict}</strong> recommendation is based on a weighted composite score of <strong>{report_data["confidence"]}/10</strong>.',
+                    '    <h2>🔧 BTC Technical Indicators</h2>',
+                    '    <table>',
+                    '      <tr><th>Indicator</th><th>Value</th><th>Analysis</th></tr>',
+                    f'      <tr><td>RSI (14-day)</td><td>{btc_tech.get("rsi", "N/A"):.1f}</td><td>{"Oversold" if btc_tech.get("rsi", 50) < 30 else "Overbought" if btc_tech.get("rsi", 50) > 70 else "Neutral"}</td></tr>',
+                    f'      <tr><td>SMA30</td><td>${btc_tech.get("sma_30", 0):,.2f}</td><td>Price is {"below" if btc_tech.get("price", 0) < btc_tech.get("sma_30", 0) else "above"} 30-day average</td></tr>',
+                    f'      <tr><td>WMA200</td><td>${btc_tech.get("wma_200", 0):,.2f}</td><td>Long-term trend reference</td></tr>',
+                    f'      <tr><td>Trend</td><td>{"> SMA30" if btc_tech.get("trend", 0) > 0 else "< SMA30" if btc_tech.get("trend", 0) < 0 else "Flat"}</td><td>{"Bullish" if btc_tech.get("trend", 0) > 0 else "Bearish" if btc_tech.get("trend", 0) < 0 else "Neutral"}</td></tr>',
+                    f'      <tr><td>24h Change</td><td>{btc_tech.get("change_24h", 0):+.2f}%</td><td>{"Down" if btc_tech.get("change_24h", 0) < 0 else "Up"}</td></tr>',
+                    f'      <tr><td>PPO Histogram</td><td>{btc_tech.get("macd_hist", 0):+.2f}%</td><td>{"Bullish momentum" if btc_tech.get("macd_hist", 0) > 0 else "Bearish momentum"}</td></tr>',
+                    '    </table>',
+                    '    <p><strong>Analysis:</strong> ',
+                    f'      {tech_rationale}',
                     '    </p>',
-                    '    <ul>',
-                    '      <li><strong>Technical:</strong> ' + tech_rationale + '</li>',
-                    f'      <li><strong>Sentiment:</strong> Fear & Greed at {fng_val} ({fng_lbl})</li>',
-                    f'      <li><strong>Risk factors:</strong> {"Minimal" if not risk_factors else f"{len(risk_factors)} identified"}</li>',
-                    '    </ul>',
                     '  </div>',
                     '',
                     '  <div class="section">',
-                    '    <h2>Full Report</h2>',
-                    '    <p><a href="https://openclaw.philsonnah.com/memory/crypto-reports/crypto-report-latest.md">View Full Markdown Report →</a></p>',
-                    '  </div>',
-                    '',
-                    '  <div class="section" style="border-top: 1px solid #ddd; padding-top: 20px; margin-top: 40px; color: #888; font-size: 12px;">',
-                    '    <p>📈 Generated by Crypto Reporter v1.0 | Part of OpenClaw</p>',
-                    '    <p>⚠️ <em>This is for informational purposes only. Not financial advice.</em></p>',
-                    '  </div>',
-                    '</body>',
-                    '</html>'
+                    '    <h2>⚙️ Fundamentals Overview</h2>',
+                    '    <ul style="list-style: none; padding: 0;">',
                 ])
+
+                # Hash rate
+                btc_hash = report_data.get('onchain', {}).get('btc_hash_rate')
+                hash_change = report_data.get('onchain', {}).get('btc_hash_rate_change_24h')
+                if btc_hash:
+                    change_str = f" (24h change: {hash_change:+.2f}%)" if hash_change is not None else ""
+                    html_lines.append(f'      <li><strong>BTC Hash Rate:</strong> {btc_hash:,.0f} TH/s{change_str}</li>')
+                else:
+                    html_lines.append('      <li>BTC Hash Rate: Data unavailable</li>')
+
+                # Halving info
+                halving_last = report_data.get('onchain', {}).get('halving_last')
+                halving_next = report_data.get('onchain', {}).get('halving_next_estimate')
+                halving_days_since = report_data.get('onchain', {}).get('halving_days_since')
+                halving_days_until = report_data.get('onchain', {}).get('halving_days_until')
+                if halving_last and halving_days_since:
+                    html_lines.append(f'      <li><strong>Last BTC Halving:</strong> {halving_last} ({halving_days_since} days ago)</li>')
+                if halving_next and halving_days_until:
+                    html_lines.append(f'      <li><strong>Next BTC Halving:</strong> {halving_next} — in {halving_days_until} days</li>')
+
+                # Halving phase
+                if halving_days_since is not None:
+                    ds = halving_days_since
+                    phase = "Early Post-Halving (Bullish Phase)" if ds < 300 else "Mid Post-Halving (Peak Bullish)" if ds < 550 else "Late Post-Halving (Distribution/Bear Risk)"
+                    html_lines.append(f'      <li><strong>Halving Cycle Phase:</strong> {phase}</li>')
+
+                # Miner revenue and difficulty
+                miner_rev = report_data.get('onchain', {}).get('miner_revenue_usd')
+                fees = report_data.get('onchain', {}).get('total_fees_usd')
+                diff = report_data.get('onchain', {}).get('difficulty')
+                diff_change = report_data.get('onchain', {}).get('difficulty_change_pct')
+                if miner_rev is not None:
+                    rev_str = f"${miner_rev:,.0f}"
+                    if fees is not None and fees > 0:
+                        fee_pct = (fees / miner_rev) * 100
+                        html_lines.append(f'      <li><strong>Miner Revenue (24h):</strong> {rev_str} (fees: ${fees:,.0f}, {fee_pct:.1f}% of revenue)</li>')
+                    else:
+                        html_lines.append(f'      <li><strong>Miner Revenue (24h):</strong> {rev_str}</li>')
+                if diff is not None:
+                    diff_str = f"{diff:,.0f}"
+                    if diff_change is not None:
+                        diff_str += f" (2w change: {diff_change:+.2f}%)"
+                    html_lines.append(f'      <li><strong>Network Difficulty:</strong> {diff_str}</li>')
+
+                html_lines.append('    </ul>')
+                html_lines.append('  </div>')
+                html_lines.append('')
+                html_lines.append('  <div class="section">')
+                html_lines.append('    <h2>📰 Sentiment Analysis</h2>')
+                html_lines.append(f'    <p><strong>Fear & Greed Index:</strong> <span class="{"negative" if fng_val < 25 else "neutral" if fng_val < 50 else "positive"}">{fng_val}</span> ({fng_lbl})</p>')
+                html_lines.append(f'    <p><strong>News Sentiment Score:</strong> {news_sent:.3f} (-1 to +1)</p>')
+                if pos_kw:
+                    html_lines.append(f'    <p><strong>Positive keywords:</strong> {", ".join(pos_kw)}</p>')
+                if neg_kw:
+                    html_lines.append(f'    <p><strong>Negative keywords:</strong> {", ".join(neg_kw)}</p>')
+
+                # Top headlines
+                if news_items:
+                    html_lines.append('    <h3>Top Headlines</h3>')
+                    for item in news_items[:5]:
+                        title = item.get('title', 'No title')
+                        link = item.get('link', '#')
+                        source = item.get('source', 'Unknown')
+                        html_lines.append(f'    <div class="news-item"><span class="news-title"><a href="{link}">{title}</a></span><span class="news-source">— {source}</span></div>')
+
+                html_lines.append('  </div>')
+                html_lines.append('')
+                html_lines.append('  <div class="section">')
+                html_lines.append('    <h2>⚠️ Risk Assessment</h2>')
+                html_lines.append(f'    <p><strong>Overall Risk Score:</strong> {risk_score:.3f} / 1.0</p>')
+                html_lines.append(f'    <p><strong>Adjusted Score:</strong> {risks_adj_score:.1f} / 10.0</p>')
+                if risk_factors:
+                    html_lines.append('    <p><strong>Risk Factors Detected:</strong></p><ul>')
+                    for factor in risk_factors:
+                        html_lines.append(f'      <li>{factor}</li>')
+                    html_lines.append('    </ul>')
+                else:
+                    html_lines.append('    <p><strong>No significant risk factors detected.</strong></p>')
+                html_lines.append('    <p><strong>Context:</strong><br>')
+                html_lines.append(f'      News sentiment: {news_sent:.3f} | BTC dominance: {btc_dom:.1f}%')
+                html_lines.append('    </p>')
+                html_lines.append('  </div>')
+                html_lines.append('')
+                html_lines.append('  <div class="section">')
+                html_lines.append('    <h2>💡 Verdict Rationale</h2>')
+                html_lines.append(f'    <p>The <strong>{verdict}</strong> recommendation is based on a weighted composite score of <strong>{report_data["confidence"]}/10</strong>.</p>')
+                html_lines.append('    <ul>')
+                html_lines.append(f'      <li><strong>Technical:</strong> {tech_rationale}</li>')
+                html_lines.append(f'      <li><strong>Sentiment:</strong> Fear & Greed at {fng_val} ({fng_lbl})</li>')
+                html_lines.append(f'      <li><strong>News tone:</strong> {"Positive" if news_sent > 0.1 else "Negative" if news_sent < -0.1 else "Neutral"}</li>')
+                html_lines.append(f'      <li><strong>Risk factors:</strong> {len(risk_factors)} identified: {"; ".join(risk_factors) if risk_factors else "Minimal"}</li>')
+                html_lines.append('    </ul>')
+                html_lines.append('  </div>')
+                html_lines.append('')
+                html_lines.append('  <div class="section">')
+                html_lines.append('    <h2>📋 Methodology</h2>')
+                html_lines.append('    <ul>')
+                html_lines.append('      <li><strong>Data sources:</strong> CoinGecko API, Alternative.me, Blockchain.info, RSS news feeds</li>')
+                html_lines.append('      <li><strong>Technical indicators:</strong> RSI (14-day), SMA30, PPO (12/26/9), Volume MA(30)</li>')
+                html_lines.append('      <li><strong>Technical score:</strong> Weighted combination of RSI, trend, PPO histogram, volume, Fear & Greed</li>')
+                html_lines.append('      <li><strong>Sentiment:</strong> Keyword-based analysis of recent news headlines</li>')
+                html_lines.append('      <li><strong>Risk assessment:</strong> Aggregates negative news keywords, regulatory mentions, BTC dominance</li>')
+                html_lines.append('    </ul>')
+                html_lines.append('  </div>')
+                html_lines.append('')
+                html_lines.append('  <div class="disclaimer">')
+                html_lines.append('    <p>⚠️ <em>This is for informational purposes only. Not financial advice.</em></p>')
+                html_lines.append('    <p>📈 Generated by Crypto Reporter v1.0 | Part of OpenClaw</p>')
+                html_lines.append('  </div>')
+                html_lines.append('</body>')
+                html_lines.append('</html>')
+
+                html_body = '\n'.join(html_lines)
+
+                # Send email via gog
+                logger.info(f"Sending email to {email_recipient} via gog...")
+                result = subprocess.run(
+                    ['gog', 'gmail', 'send', '--to', email_recipient, '--subject', subject, '--body-html', html_body],
+                    capture_output=True,
+                    text=True,
+                    timeout=30
+                )
+                if result.returncode == 0:
+                    logger.info(f"✓ Email sent successfully to {email_recipient}")
+                else:
+                    logger.error(f"✗ Email send failed (exit {result.returncode}): {result.stderr or result.stdout}")
+
+            except Exception as e:
+                logger.error(f"Email notification failed: {e}", exc_info=True)
                 html_body = '\n'.join(html_lines)
 
                 # Send email via gog with HTML content directly
