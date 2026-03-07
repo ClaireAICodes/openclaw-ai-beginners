@@ -1151,11 +1151,30 @@ def main():
                 weights = config['VERDICT_WEIGHTS']
                 risk_factors = report_data.get('risk_factors', [])
                 risk_score = report_data.get('risk_score', 0)
+                wma200_dist = report_data.get('wma200_dist')
                 risks_adj_score = report_data.get('risks_adjusted', 10.0 - (risk_score * 10))
                 news_items = report_data.get('news', {}).get('items', [])
                 news_sent = report_data.get('news', {}).get('sentiment_score', 0)
                 pos_kw = report_data.get('news', {}).get('positive_keywords', [])
                 neg_kw = report_data.get('news', {}).get('negative_keywords', [])
+
+                # Precompute BTC tech display values (safe for None)
+                rsi_val = btc_tech.get('rsi')
+                rsi_display = f"{rsi_val:.1f}" if rsi_val is not None else "N/A"
+                rsi_status = "Oversold" if rsi_val is not None and rsi_val < 30 else "Overbought" if rsi_val is not None and rsi_val > 70 else "Neutral"
+                sma30_val = btc_tech.get('sma_30')
+                sma30_display = f"${sma30_val:,.2f}" if sma30_val is not None else "N/A"
+                wma200_val = btc_tech.get('wma_200')
+                wma200_display = f"${wma200_val:,.2f}" if wma200_val is not None else "N/A"
+                trend_val = btc_tech.get('trend', 0)
+                trend_display = "> SMA30" if trend_val > 0 else "< SMA30" if trend_val < 0 else "Flat"
+                trend_status = "Bullish" if trend_val > 0 else "Bearish" if trend_val < 0 else "Neutral"
+                ppo_hist = btc_tech.get('macd_hist')
+                ppo_display = f"{ppo_hist:+.2f}%" if ppo_hist is not None else "N/A"
+                btc_price_val = btc_tech.get('price', 0)
+                btc_change_val = btc_tech.get('change_24h', 0)
+                btc_vol_val = btc_tech.get('volume_24h', 0)
+                btc_vol_ma_val = btc_tech.get('volume_ma')
 
                 # Build comprehensive HTML email
                 html_lines = [
@@ -1249,12 +1268,12 @@ def main():
                     '    <h2>🔧 BTC Technical Indicators</h2>',
                     '    <table>',
                     '      <tr><th>Indicator</th><th>Value</th><th>Analysis</th></tr>',
-                    f'      <tr><td>RSI (14-day)</td><td>{btc_tech.get("rsi", "N/A"):.1f}</td><td>{"Oversold" if btc_tech.get("rsi", 50) < 30 else "Overbought" if btc_tech.get("rsi", 50) > 70 else "Neutral"}</td></tr>',
-                    f'      <tr><td>SMA30</td><td>${btc_tech.get("sma_30", 0):,.2f}</td><td>Price is {"below" if btc_tech.get("price", 0) < btc_tech.get("sma_30", 0) else "above"} 30-day average</td></tr>',
-                    f'      <tr><td>WMA200</td><td>${btc_tech.get("wma_200", 0):,.2f}</td><td>Long-term trend reference</td></tr>',
-                    f'      <tr><td>Trend</td><td>{"> SMA30" if btc_tech.get("trend", 0) > 0 else "< SMA30" if btc_tech.get("trend", 0) < 0 else "Flat"}</td><td>{"Bullish" if btc_tech.get("trend", 0) > 0 else "Bearish" if btc_tech.get("trend", 0) < 0 else "Neutral"}</td></tr>',
-                    f'      <tr><td>24h Change</td><td>{btc_tech.get("change_24h", 0):+.2f}%</td><td>{"Down" if btc_tech.get("change_24h", 0) < 0 else "Up"}</td></tr>',
-                    f'      <tr><td>PPO Histogram</td><td>{btc_tech.get("macd_hist", 0):+.2f}%</td><td>{"Bullish momentum" if btc_tech.get("macd_hist", 0) > 0 else "Bearish momentum"}</td></tr>',
+                    f'      <tr><td>RSI (14-day)</td><td>{rsi_display}</td><td>{rsi_status}</td></tr>',
+                    f'      <tr><td>SMA30</td><td>{sma30_display}</td><td>Price is {"below" if btc_price_val < sma30_val else "above"} 30-day average</td></tr>',
+                    f'      <tr><td>WMA200</td><td>{wma200_display}</td><td>Long-term trend reference</td></tr>',
+                    f'      <tr><td>Trend</td><td>{trend_display}</td><td>{trend_status}</td></tr>',
+                    f'      <tr><td>24h Change</td><td>{btc_change_val:+.2f}%</td><td>{"Down" if btc_change_val < 0 else "Up"}</td></tr>',
+                    f'      <tr><td>PPO Histogram</td><td>{ppo_display}</td><td>{"Bullish momentum" if ppo_hist and ppo_hist > 0 else "Bearish momentum" if ppo_hist else "Neutral"}</td></tr>',
                     '    </table>',
                     '    <p><strong>Analysis:</strong> ',
                     f'      {tech_rationale}',
@@ -1345,6 +1364,8 @@ def main():
                     html_lines.append('    <p><strong>No significant risk factors detected.</strong></p>')
                 html_lines.append('    <p><strong>Context:</strong><br>')
                 html_lines.append(f'      News sentiment: {news_sent:.3f} | BTC dominance: {btc_dom:.1f}%')
+                if wma200_dist is not None:
+                    html_lines.append(f' | BTC vs WMA200: {wma200_dist:+.1f}%')
                 html_lines.append('    </p>')
                 html_lines.append('  </div>')
                 html_lines.append('')
