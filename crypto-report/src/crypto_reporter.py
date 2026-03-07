@@ -378,12 +378,12 @@ def assess_risk(
     contributions = []  # (label, added_score)
     sent_score, _, neg_kws = news_sent
 
-    if sent_score < -0.3:
+    if sent_score <= -0.3:
         add = 0.2
         score += add
         factors.append("Negative news sentiment")
         contributions.append(("Negative news sentiment", add, f"sent_score={sent_score:.3f}"))
-    if len(neg_kws) > 5:
+    if len(neg_kws) >= 5:
         add = 0.1
         score += add
         factors.append("Multiple negative keywords")
