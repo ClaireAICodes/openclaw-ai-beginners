@@ -15,6 +15,7 @@ import urllib.error
 import urllib.parse
 import time
 import random
+import subprocess
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, List, Any, Optional
@@ -1135,6 +1136,140 @@ def main():
             latest.unlink()
         latest.symlink_to(md_path.name)
         logger.info("Updated latest symlink")
+
+        # Send email notification if enabled
+        if config.get('ENABLE_EMAIL_NOTIFICATIONS'):
+            try:
+                import tempfile
+                email_recipient = config.get('EMAIL_RECIPIENT')
+                email_sender = config.get('EMAIL_SENDER')
+                subject_prefix = config.get('EMAIL_SUBJECT_PREFIX', 'Crypto Report')
+                subject = f"{subject_prefix}: {verdict} (Score: {report_data['confidence']}/10) - {date_str}"
+
+                mcap_usd = global_data.get('total_market_cap', {}).get('usd', 0)
+                vol_usd = global_data.get('total_volume', {}).get('usd', 0)
+                s = report_data['scores']
+                weights = config['VERDICT_WEIGHTS']
+                risk_factors = report_data.get('risk_factors', [])
+
+                html_lines = [
+                    '<!DOCTYPE html>',
+                    '<html>',
+                    '<head>',
+                    '  <style>',
+                    '    body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }',
+                    '    .header { background: #4a90e2; color: white; padding: 15px; border-radius: 5px; margin-bottom: 20px; }',
+                    '    .verdict { font-size: 24px; font-weight: bold; margin: 10px 0; }',
+                    '    .score { font-size: 18px; color: #666; }',
+                    '    table { border-collapse: collapse; width: 100%; margin: 20px 0; }',
+                    '    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }',
+                    '    th { background-color: #f2f2f2; }',
+                    '    .positive { color: green; }',
+                    '    .negative { color: red; }',
+                    '    .section { margin: 25px 0; }',
+                    '    .section h2 { color: #4a90e2; border-bottom: 2px solid #4a90e2; padding-bottom: 5px; }',
+                    '  </style>',
+                    '</head>',
+                    '<body>',
+                    '  <div class="header">',
+                    '    <h1>📊 Daily Cryptocurrency Market Report</h1>',
+                    f'    <div class="verdict">Market Verdict: {verdict}</div>',
+                    f'    <div class="score">Confidence Score: {report_data["confidence"]}/10</div>',
+                    f'    <div>Report Date: {date_str}</div>',
+                    '  </div>',
+                    '',
+                    '  <div class="section">',
+                    '    <h2>Overview</h2>',
+                    '    <ul>',
+                    f'      <li><strong>Global Market Cap:</strong> ${mcap_usd:,.0f}</li>',
+                    f'      <li><strong>24h Volume:</strong> ${vol_usd:,.0f}</li>',
+                    f'      <li><strong>BTC Dominance:</strong> {btc_dom:.1f}%</li>'
+                ]
+                if eth_dom is not None:
+                    html_lines.append(f'      <li><strong>ETH Dominance:</strong> {eth_dom:.1f}%</li>')
+                if stable_dom is not None:
+                    html_lines.append(f'      <li><strong>Stablecoin Dominance:</strong> {stable_dom:.1f}%</li>')
+                html_lines.extend([
+                    f'      <li><strong>Fear & Greed Index:</strong> {fng_val} ({fng_lbl})</li>',
+                    '    </ul>',
+                    '  </div>',
+                    '',
+                    '  <div class="section">',
+                    '    <h2>Score Breakdown</h2>',
+                    '    <table>',
+                    '      <tr><th>Dimension</th><th>Score</th><th>Weight</th><th>Weighted</th></tr>',
+                    f'      <tr><td>Fundamentals</td><td>{s["fundamentals"]}/10</td><td>30%</td><td>{weights.get("fundamentals",0.3)*s["fundamentals"]:.2f}</td></tr>',
+                    f'      <tr><td>Technicals</td><td>{s["technicals"]}/10</td><td>25%</td><td>{weights.get("technicals",0.25)*s["technicals"]:.2f}</td></tr>',
+                    f'      <tr><td>Sentiment</td><td>{s["sentiment"]}/10</td><td>20%</td><td>{weights.get("sentiment",0.2)*s["sentiment"]:.2f}</td></tr>',
+                    f'      <tr><td>Risks</td><td>{s["risks_adjusted"]}/10</td><td>25%</td><td>{weights.get("risks",0.25)*s["risks_adjusted"]:.2f}</td></tr>',
+                    f'      <tr><td colspan="3"><strong>Total</strong></td><td><strong>{s["weighted_total"]:.2f}</strong></td></tr>',
+                    '    </table>',
+                    '  </div>',
+                    '',
+                    '  <div class="section">',
+                    '    <h2>Top Assets</h2>',
+                    '    <table>',
+                    '      <tr><th>Symbol</th><th>Name</th><th>Price</th><th>24h Change</th></tr>'
+                ])
+                # Add top 5 asset rows
+                for sym, a in list(assets.items())[:5]:
+                    price = f"${a.get('price', 0):,.2f}" if a.get('price') else "N/A"
+                    change = a.get('change_24h', 0)
+                    change_class = "positive" if change > 0 else "negative" if change < 0 else ""
+                    change_str = f"<span class='{change_class}'>{change:+.2f}%</span>" if change is not None else "N/A"
+                    html_lines.append(f'      <tr><td>{sym}</td><td>{a["name"]}</td><td>{price}</td><td>{change_str}</td></tr>')
+                html_lines.extend([
+                    '    </table>',
+                    '  </div>',
+                    '',
+                    '  <div class="section">',
+                    '    <h2>Verdict Rationale</h2>',
+                    '    <p>',
+                    f'      The <strong>{verdict}</strong> recommendation is based on a weighted composite score of <strong>{report_data["confidence"]}/10</strong>.',
+                    '    </p>',
+                    '    <ul>',
+                    '      <li><strong>Technical:</strong> ' + tech_rationale + '</li>',
+                    f'      <li><strong>Sentiment:</strong> Fear & Greed at {fng_val} ({fng_lbl})</li>',
+                    f'      <li><strong>Risk factors:</strong> {"Minimal" if not risk_factors else f"{len(risk_factors)} identified"}</li>',
+                    '    </ul>',
+                    '  </div>',
+                    '',
+                    '  <div class="section">',
+                    '    <h2>Full Report</h2>',
+                    '    <p><a href="https://openclaw.philsonnah.com/memory/crypto-reports/crypto-report-latest.md">View Full Markdown Report →</a></p>',
+                    '  </div>',
+                    '',
+                    '  <div class="section" style="border-top: 1px solid #ddd; padding-top: 20px; margin-top: 40px; color: #888; font-size: 12px;">',
+                    '    <p>📈 Generated by Crypto Reporter v1.0 | Part of OpenClaw</p>',
+                    '    <p>⚠️ <em>This is for informational purposes only. Not financial advice.</em></p>',
+                    '  </div>',
+                    '</body>',
+                    '</html>'
+                ])
+                html_body = '\n'.join(html_lines)
+
+                # Write to temp file
+                with tempfile.NamedTemporaryFile(mode='w', suffix='.html', delete=False) as tmp:
+                    tmp.write(html_body)
+                    tmp_path = tmp.name
+
+                # Send email via gog
+                cmd = [
+                    'gog', 'gmail', 'send',
+                    '--to', email_recipient,
+                    '--subject', subject,
+                    '--body-html', tmp_path
+                ]
+                logger.info(f"Sending email to {email_recipient} via gog...")
+                result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+                if result.returncode == 0:
+                    logger.info(f"✓ Email sent successfully to {email_recipient}")
+                else:
+                    logger.error(f"✗ Email send failed: {result.stderr or result.stdout}")
+                os.unlink(tmp_path)
+
+            except Exception as e:
+                logger.error(f"Email notification failed: {e}", exc_info=True)
 
         # Print summary for cron
         print(json.dumps({

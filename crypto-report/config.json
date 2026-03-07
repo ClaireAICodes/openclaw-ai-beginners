@@ -28,5 +28,9 @@
     "https://decrypt.co/feed"
   ],
   "ENABLE_TELEGRAM_NOTIFICATIONS": true,
-  "TELEGRAM_CHANNEL": "129156516"
+  "TELEGRAM_CHANNEL": "129156516",
+  "ENABLE_EMAIL_NOTIFICATIONS": true,
+  "EMAIL_RECIPIENT": "philsonnah@gmail.com",
+  "EMAIL_SENDER": "myaislaveclaire@gmail.com",
+  "EMAIL_SUBJECT_PREFIX": "Crypto Report"
 }
