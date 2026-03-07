@@ -1221,8 +1221,8 @@ def main():
                     f'      <div class="highlight"><strong>Global Market Cap:</strong><br>${mcap_usd:,.0f}</div>',
                     f'      <div class="highlight"><strong>24h Volume:</strong><br>${vol_usd:,.0f}</div>',
                     f'      <div class="highlight"><strong>BTC Dominance:</strong><br>{btc_dom:.1f}%</div>',
-                    f'      <div class="highlight"><strong>ETH Dominance:</strong><br>{eth_dom if eth_dom is not None else "N/A"}%</div>',
-                    f'      <div class="highlight"><strong>Stablecoin Dom:</strong><br>{stable_dom if stable_dom is not None else "N/A"}%</div>',
+                    f'      <div class="highlight"><strong>ETH Dominance:</strong><br>{eth_dom:.1f}%</div>' if eth_dom is not None else '      <div class="highlight"><strong>ETH Dominance:</strong><br>N/A</div>',
+                    f'      <div class="highlight"><strong>Stablecoin Dom:</strong><br>{stable_dom:.1f}%</div>' if stable_dom is not None else '      <div class="highlight"><strong>Stablecoin Dom:</strong><br>N/A</div>',
                     f'      <div class="highlight"><strong>Fear & Greed:</strong><br>{fng_val} ({fng_lbl})</div>',
                     '    </div>',
                     '  </div>',
@@ -1242,7 +1242,7 @@ def main():
                     '  <div class="section">',
                     '    <h2>💰 Asset Analysis</h2>',
                     '    <table>',
-                    '      <tr><th>Symbol</th><th>Name</th><th>Price</th><th>24h Change</th><th>RSI</th><th>Trend</th></tr>',
+                    '      <tr><th>Symbol</th><th>Name</th><th>Price</th><th>24h Change</th></tr>',
                 ]
 
                 # Add all assets with their technical indicators if available
@@ -1250,15 +1250,7 @@ def main():
                     price = f"${a.get('price', 0):,.2f}" if a.get('price') else "N/A"
                     change = a.get('change_24h', 0)
                     change_str = f'<span class="{"positive" if change > 0 else "negative" if change < 0 else "neutral"}">{change:+.2f}%</span>' if change is not None else "N/A"
-                    rsi = btc_tech.get('rsi') if sym == 'BTC' else a.get('rsi')
-                    rsi_str = f"{rsi:.1f}" if rsi is not None else "N/A"
-                    trend = btc_tech.get('trend', 0) if sym == 'BTC' else a.get('trend', 0)
-                    if sym == 'BTC' and btc_tech.get('trend') is not None:
-                        trend_val = btc_tech.get('trend', 0)
-                        trend_str = "> SMA30" if trend_val > 0 else "< SMA30" if trend_val < 0 else "Flat"
-                    else:
-                        trend_str = ">" if trend > 0 else "<" if trend < 0 else "Flat"
-                    html_lines.append(f'      <tr><td>{sym}</td><td>{a["name"]}</td><td>{price}</td><td>{change_str}</td><td>{rsi_str}</td><td>{trend_str}</td></tr>')
+                    html_lines.append(f'      <tr><td>{sym}</td><td>{a["name"]}</td><td>{price}</td><td>{change_str}</td></tr>')
 
                 html_lines.extend([
                     '    </table>',
