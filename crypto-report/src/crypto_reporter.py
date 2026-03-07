@@ -1149,8 +1149,9 @@ def main():
                 vol_usd = global_data.get('total_volume', {}).get('usd', 0)
                 s = report_data['scores']
                 weights = config['VERDICT_WEIGHTS']
-                risk_factors = report_data.get('risk_factors', [])
-                risk_score = report_data.get('risk_score', 0)
+                risks = report_data.get('risks', {})
+                risk_factors = risks.get('factors', [])
+                risk_score = risks.get('score', 0)
                 wma200_dist = report_data.get('wma200_dist')
                 risks_adj_score = report_data.get('risks_adjusted', 10.0 - (risk_score * 10))
                 news_items = report_data.get('news', {}).get('items', [])
