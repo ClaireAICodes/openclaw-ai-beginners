@@ -1140,7 +1140,6 @@ def main():
         # Send email notification if enabled
         if config.get('ENABLE_EMAIL_NOTIFICATIONS'):
             try:
-                import tempfile
                 email_recipient = config.get('EMAIL_RECIPIENT')
                 email_sender = config.get('EMAIL_SENDER')
                 subject_prefix = config.get('EMAIL_SUBJECT_PREFIX', 'Crypto Report')
@@ -1248,25 +1247,18 @@ def main():
                 ])
                 html_body = '\n'.join(html_lines)
 
-                # Write to temp file
-                with tempfile.NamedTemporaryFile(mode='w', suffix='.html', delete=False) as tmp:
-                    tmp.write(html_body)
-                    tmp_path = tmp.name
-
-                # Send email via gog
-                cmd = [
-                    'gog', 'gmail', 'send',
-                    '--to', email_recipient,
-                    '--subject', subject,
-                    '--body-html', tmp_path
-                ]
+                # Send email via gog with HTML content directly
                 logger.info(f"Sending email to {email_recipient} via gog...")
-                result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+                result = subprocess.run(
+                    ['gog', 'gmail', 'send', '--to', email_recipient, '--subject', subject, '--body-html', html_body],
+                    capture_output=True,
+                    text=True,
+                    timeout=30
+                )
                 if result.returncode == 0:
                     logger.info(f"✓ Email sent successfully to {email_recipient}")
                 else:
-                    logger.error(f"✗ Email send failed: {result.stderr or result.stdout}")
-                os.unlink(tmp_path)
+                    logger.error(f"✗ Email send failed (exit {result.returncode}): {result.stderr or result.stdout}")
 
             except Exception as e:
                 logger.error(f"Email notification failed: {e}", exc_info=True)
