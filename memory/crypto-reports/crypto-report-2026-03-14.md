@@ -1,0 +1,119 @@
+# Cryptocurrency Market Report - 2026-03-14
+
+---
+
+## Executive Summary
+
+**Market Verdict: HOLD**
+**Confidence Score: 5.7/10**
+
+### Key Highlights
+
+- **Global Market Cap:** $2,497,152,148,593
+- **24h Volume:** $54,650,769,729
+- **BTC Dominance:** 56.9%
+- **ETH Dominance:** 10.1%
+- **Stablecoin Dominance:** 10.5%
+- **Fear & Greed:** 16 (Extreme Fear)
+- **BTC Hash Rate 24h:** +0.00%
+- **Assets analyzed:** BTC, ETH, ADA, SOL, AVAX, DOT, LINK, UNI, AAVE, MKR
+
+## Score Breakdown
+
+| Dimension | Score | Weight | Weighted |
+|-----------|-------|--------|----------|
+| Fundamentals | 4.65/10 | 30% | 1.40 |
+| Technicals | 7.76/10 | 25% | 1.94 |
+| Sentiment | 3.07/10 | 20% | 0.61 |
+| Risks_adjusted | 7.0/10 | 25% | 1.75 |
+| **Total** | | **100%** | **5.70** |
+
+## Asset Analysis
+
+| Symbol | Name | Price | 24h Change |
+|--------|------|-------|------------|
+| BTC | Bitcoin | $71,011.00 | -0.68% |
+| ETH | Ethereum | $2,092.23 | -0.78% |
+| SOL | Solana | $88.06 | -1.14% |
+| ADA | Cardano | $0.26 | -3.72% |
+| LINK | Chainlink | $9.06 | -2.16% |
+| AVAX | Avalanche | $9.67 | -2.84% |
+| UNI | Uniswap | $3.97 | -0.85% |
+| DOT | Polkadot | $1.44 | -5.47% |
+| AAVE | Aave | $112.08 | -2.18% |
+| MKR | Maker | $1,868.12 | -3.40% |
+
+## BTC Technical Indicators (Daily)
+
+- **RSI:** 53.5
+- **SMA30:** $68,219.15
+- **WMA200:** $58,811.29
+- **Trend:** > SMA30
+- **24h Change:** -0.68%
+- **24h Volume:** $54,650,769,729
+- **Volume MA(30):** $45,922,923,462
+- **PPO:** -0.23%
+- **PPO Signal:** -1.24%
+- **PPO Histogram:** +1.01%
+**Analysis:** RSI is neutral; PPO above signal suggests bullish momentum; Price above 30‑day SMA confirms uptrend.
+
+## Fundamentals Overview
+
+- **BTC Hash Rate:** 1,038,252,262 TH/s (24h change: +0.00%)
+- **Last BTC Halving:** 2024-04-20 (693 days ago)
+- **Next BTC Halving (Estimated):** 2028-04-11 (estimated) — in 759 days
+- **Halving Cycle Phase:** Late Post-Halving (Distribution/Bear Risk)
+- **Miner Revenue (24h):** $26,192,797 (24h change: -3.98%) (fees: $3,066, 0.0% of revenue)
+- **Network Difficulty:** 145,042,165,424,850 (2w change: +0.00%)
+- *More detailed on-chain metrics require premium data sources*
+
+## Sentiment Analysis
+
+- **Fear & Greed Index:** 16 (Extreme Fear)
+- **News Sentiment Score:** 0.053 (-1 to +1)
+  - Positive keywords: bullish, rally, surge, up, rise
+  - Negative keywords: drop, down, loss, regulation, sec
+
+## Top Headlines
+
+- [Bitcoin can survive 72% of the world's submarine cables being cut, but a targeted attack on five hosting providers could cripple it](https://www.coindesk.com/markets/2026/03/13/bitcoin-can-survive-72-of-the-world-s-submarine-cables-being-cut-but-a-targeted-attack-on-five-hosting-providers-could-cripple-it) — feeds.feedburner.com
+- [A huge gap between network use and token value is the most important thing happening in XRP right now](https://www.coindesk.com/markets/2026/03/13/dnp-xrp-ledger-activity-is-hitting-records-but-why-are-xrp-prices-down-62-from-peak) — feeds.feedburner.com
+- [Court closes Custodia fight with Federal Reserve just as Fed opens master-account door](https://www.coindesk.com/policy/2026/03/13/court-closes-custodia-fight-with-federal-reserve-just-as-fed-opens-master-account-door) — feeds.feedburner.com
+- [Circle overtakes BlackRock in tokenized Treasuries as market hits record $11 billion](https://www.coindesk.com/markets/2026/03/13/circle-overtakes-blackrock-in-tokenized-treasuries-as-market-hits-record-usd11-billion) — feeds.feedburner.com
+- [Arthur Hayes: Strong Revenue and Real Trading Could Send HYPE to $150](https://www.coindesk.com/markets/2026/03/13/arthur-hayes-says-hyperliquid-s-hype-token-could-reach-usd150-by-2026) — feeds.feedburner.com
+
+## Risk Assessment
+
+**Overall Risk Score:** 0.300 / 1.0
+**Adjusted Score (inverted):** 7.0 / 10.0
+
+**Factor Breakdown:**
+- Multiple negative keywords: +0.10 (count=5)
+- Regulatory concerns: +0.20 (keywords detected)
+
+**Total Risk Factors:** 2 contributing 0.300 points.
+
+**Context:**
+- News sentiment score: 0.053 (-1 to +1)
+- BTC dominance: 56.9%
+- BTC price vs WMA200: +20.7%
+
+## Verdict Rationale
+
+The **HOLD** recommendation is based on a weighted composite score of **5.7/10**.
+
+- **Technical factors:** RSI neutral (53.47); Price > SMA30; PPO histogram +1.01%; Extreme fear (contrarian).
+- **Sentiment:** Fear & Greed at 16 (Extreme Fear).
+- **News tone:** Neutral.
+- **Risk factors:** 2 identified: Multiple negative keywords; Regulatory concerns.
+
+## Methodology Notes
+
+- Data sources: CoinGecko API, Alternative.me, Blockchair, RSS news feeds.
+- Technical indicators: RSI (14-day), 30-day SMA, PPO (12/26/9), 30-day Volume MA.
+- Technical score: weighted combination of RSI, trend, PPO histogram, volume confirmation, and Fear & Greed (0-10 scale).
+- Sentiment: Simple keyword-based analysis of recent news headlines.
+- Risk assessment: Aggregates negative news keywords, regulatory mentions, BTC dominance.
+- **Not financial advice** - for informational purposes only.
+
+*Generated by Crypto Reporter v1.0 on 2026-03-14 06:01 UTC*
