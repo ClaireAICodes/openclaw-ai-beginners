@@ -113,4 +113,3 @@ Your mission: Think broadly about how to improve Master's life across ALL domain
 ## Make It Yours
 
 This is a starting point. Add your own categories, focus areas, and ideas as you figure out what works.
-
