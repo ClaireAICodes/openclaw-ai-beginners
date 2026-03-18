@@ -1,0 +1,119 @@
+# Cryptocurrency Market Report - 2026-03-17
+
+---
+
+## Executive Summary
+
+**Market Verdict: HOLD**
+**Confidence Score: 5.68/10**
+
+### Key Highlights
+
+- **Global Market Cap:** $2,609,818,919,619
+- **24h Volume:** $59,484,793,984
+- **BTC Dominance:** 56.8%
+- **ETH Dominance:** 10.7%
+- **Stablecoin Dominance:** 10.1%
+- **Fear & Greed:** 28 (Fear)
+- **BTC Hash Rate 24h:** +0.00%
+- **Assets analyzed:** BTC, ETH, ADA, SOL, AVAX, DOT, LINK, UNI, AAVE, MKR
+
+## Score Breakdown
+
+| Dimension | Score | Weight | Weighted |
+|-----------|-------|--------|----------|
+| Fundamentals | 4.65/10 | 30% | 1.40 |
+| Technicals | 6.98/10 | 25% | 1.75 |
+| Sentiment | 3.93/10 | 20% | 0.79 |
+| Risks_adjusted | 7.0/10 | 25% | 1.75 |
+| **Total** | | **100%** | **5.68** |
+
+## Asset Analysis
+
+| Symbol | Name | Price | 24h Change |
+|--------|------|-------|------------|
+| BTC | Bitcoin | $74,038.00 | +0.07% |
+| ETH | Ethereum | $2,307.63 | +1.56% |
+| SOL | Solana | $93.81 | -0.26% |
+| ADA | Cardano | $0.28 | -1.72% |
+| LINK | Chainlink | $9.73 | -0.15% |
+| AVAX | Avalanche | $10.28 | -1.78% |
+| DOT | Polkadot | $1.60 | +3.46% |
+| UNI | Uniswap | $4.03 | -0.72% |
+| AAVE | Aave | $120.23 | +1.09% |
+| MKR | Maker | $1,938.91 | +0.25% |
+
+## BTC Technical Indicators (Daily)
+
+- **RSI:** 59.4
+- **SMA30:** $68,701.32
+- **WMA200:** $58,904.48
+- **Trend:** > SMA30
+- **24h Change:** +0.07%
+- **24h Volume:** $59,484,793,984
+- **Volume MA(30):** $45,460,181,319
+- **PPO:** +1.02%
+- **PPO Signal:** -0.29%
+- **PPO Histogram:** +1.31%
+**Analysis:** RSI is neutral; PPO above signal suggests bullish momentum; Price above 30‑day SMA confirms uptrend; Current volume is significantly above average, strengthening the signal.
+
+## Fundamentals Overview
+
+- **BTC Hash Rate:** 1,038,252,262 TH/s (24h change: +0.00%)
+- **Last BTC Halving:** 2024-04-20 (696 days ago)
+- **Next BTC Halving (Estimated):** 2028-04-12 (estimated) — in 757 days
+- **Halving Cycle Phase:** Late Post-Halving (Distribution/Bear Risk)
+- **Miner Revenue (24h):** $28,910,883 (24h change: +3.19%) (fees: $2,680, 0.0% of revenue)
+- **Network Difficulty:** 145,042,165,424,850 (2w change: +0.00%)
+- *More detailed on-chain metrics require premium data sources*
+
+## Sentiment Analysis
+
+- **Fear & Greed Index:** 28 (Fear)
+- **News Sentiment Score:** 0.125 (-1 to +1)
+  - Positive keywords: rally, surge, gain, up, rise
+  - Negative keywords: drop, down, regulation, sec, ban
+
+## Top Headlines
+
+- [Bitcoin’s derivatives-led rally is already unraveling. Prices are back below $75,000](https://www.coindesk.com/markets/2026/03/17/bitcoin-s-derivatives-led-rally-is-already-unraveling-prices-are-back-below-usd75-000) — feeds.feedburner.com
+- [Bitcoin just surged past $75,000. Derivatives seem to be driving the rally. ](https://www.coindesk.com/markets/2026/03/17/bitcoin-just-surged-past-usd75-000-derivatives-are-driving-the-move) — feeds.feedburner.com
+- [AI-linked crypto tokens surge as Nvidia's Jensen Huang touts agentic future](https://www.coindesk.com/markets/2026/03/16/ai-linked-crypto-tokens-surge-as-nvidia-s-jensen-huang-touts-agentic-future) — feeds.feedburner.com
+- [Man accuses wife of using CCTV cameras to steal $172 million bitcoin from his hardware wallet](https://www.coindesk.com/business/2026/03/16/man-accuses-wife-of-using-cctv-cameras-to-steal-usd172-million-bitcoin-from-his-hardware-wallet) — feeds.feedburner.com
+- [OpenSea delays highly anticipated token launch, citing challenging crypto market conditions](https://www.coindesk.com/business/2026/03/16/opensea-delays-highly-anticipated-token-launch-citing-challenging-crypto-market-conditions) — feeds.feedburner.com
+
+## Risk Assessment
+
+**Overall Risk Score:** 0.300 / 1.0
+**Adjusted Score (inverted):** 7.0 / 10.0
+
+**Factor Breakdown:**
+- Multiple negative keywords: +0.10 (count=5)
+- Regulatory concerns: +0.20 (keywords detected)
+
+**Total Risk Factors:** 2 contributing 0.300 points.
+
+**Context:**
+- News sentiment score: 0.125 (-1 to +1)
+- BTC dominance: 56.8%
+- BTC price vs WMA200: +25.7%
+
+## Verdict Rationale
+
+The **HOLD** recommendation is based on a weighted composite score of **5.68/10**.
+
+- **Technical factors:** RSI neutral (59.42); Price > SMA30; PPO histogram +1.31%.
+- **Sentiment:** Fear & Greed at 28 (Fear).
+- **News tone:** Positive.
+- **Risk factors:** 2 identified: Multiple negative keywords; Regulatory concerns.
+
+## Methodology Notes
+
+- Data sources: CoinGecko API, Alternative.me, Blockchair, RSS news feeds.
+- Technical indicators: RSI (14-day), 30-day SMA, PPO (12/26/9), 30-day Volume MA.
+- Technical score: weighted combination of RSI, trend, PPO histogram, volume confirmation, and Fear & Greed (0-10 scale).
+- Sentiment: Simple keyword-based analysis of recent news headlines.
+- Risk assessment: Aggregates negative news keywords, regulatory mentions, BTC dominance.
+- **Not financial advice** - for informational purposes only.
+
+*Generated by Crypto Reporter v1.0 on 2026-03-17 06:01 UTC*

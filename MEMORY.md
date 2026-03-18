@@ -69,6 +69,26 @@ gh repo edit <owner>/<repo> \
 
 **Applies to:** All public and private repositories created on behalf of Master Phil, including skills, tools, agents, and project code.
 
+### MS Forms Auto-Submit Skill
+Established: 2026-03-18
+Description: OpenClaw skill for automating Microsoft Forms submission with M365 auto-login via Playwright. Built to automate Master Phil's daily org activity log form.
+
+**Repo:** https://github.com/ClaireAICodes/ms-forms-auto (PRIVATE)
+**Location:** `/home/ubuntu/.openclaw/workspace/skills/ms-forms-auto/`
+**Collaborator:** AzureKn1ght (write access)
+
+**Key Details:**
+- Form URL: https://forms.cloud.microsoft/r/LsxLaEv13i
+- 9 questions (6 required, 3 optional): Date, Training Hours, Content Dev Hours/Topic, Learning Hours/Topic, Other Items, Managing Team
+- Auth: Playwright auto-login with M365 credentials (no MFA currently)
+- Config-driven: form-values.json supports defaults + per-date overrides
+- Credentials stored in config/credentials.json (gitignored, never committed)
+
+**Next Steps:**
+- Master Phil needs to provide M365 credentials via `node scripts/setup-credentials.js`
+- First run should be `--headed` to verify login works
+- Then set up cron job for daily submission
+
 ## Lessons Learned
 
 ### Data Privacy (2026-02-11)

@@ -1,24 +1,9 @@
 {
-  "lastReviewedAtMs": 1773676860000,
-  "lastReviewDate": "2026-03-16T16:01:00Z",
-  "jobsReviewed": [
-    "0f2cf96c-13e5-4240-9242-a5f12fd09871",
-    "4834b899-6ce6-4015-a1be-034f7bcd149f",
-    "6f0cfc3e-47ff-421f-ad5a-e84173f4bf84",
-    "7458e079-8b91-4aa8-a864-9639291eb173",
-    "95d61e3f-5254-47ef-8fcf-a764ce981983",
-    "14413dd6-cdf9-4339-98c9-32d2192c97db",
-    "18ec79ca-65ef-4c54-a162-8a4c22a53c73",
-    "3187f3e1-3b3a-4717-b30d-f95fe1a71dc4",
-    "cedab272-f2ca-4c1f-8f3a-33de24e18f4f",
-    "917ac323-fc96-434d-8216-2e4bf0971848"
-  ],
-  "significantFindings": [
-    "Kamiya blog brand failure score 2/10 - critical",
-    "Morning Plan Generator 2 consecutive delivery errors",
-    "CoinFello ERC-7710 delegation skill identified as top crypto integration",
-    "Sonnet inference cost $150/day - model routing can cut 60-97%",
-    "Kamiya published 'The Double-Edged Sword' blog post successfully"
-  ],
-  "aarFile": "memory/AAR/aar-2026-03-16.md"
+  "lastReviewTs": 1773840000000,
+  "lastReviewDate": "2026-03-17",
+  "lastReviewTime": "16:00 UTC",
+  "jobsTracked": [
+    "0f2cf96c", "4afca9ef", "4834b899", "6f0cfc3e", "7458e079",
+    "917ac323", "95d61e3f", "14413dd6", "18ec79ca", "3187f3e1", "cedab272"
+  ]
 }
