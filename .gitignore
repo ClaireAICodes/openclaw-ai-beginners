@@ -1,0 +1,10 @@
+# OpenClaw beginners site - keep it clean
+
+# Only keep these files for the website
+/*
+!.gitignore
+!index.html
+!README.md
+
+# Exclude everything else by default
+# (If you need additional assets later, add them explicitly)
