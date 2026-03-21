@@ -2,6 +2,28 @@
 
 This file contains curated memories, permanent decisions, and established standards for my service to Master Phil.
 
+## Daily Log Summary (2026-03-21)
+
+### Key Events Today:
+1. **ms-forms-auto skill deployment completed** - Installed skill to ~/.openclaw/skills/, fixed pre-fill cron model override (changed from stepfun to minimax), backfilled March 20 entry, generated today's entry.
+2. **Cron jobs verification** - Pre-fill (5:45 PM SGT) now using working model; Submit (6:00 PM SGT) unchanged.
+3. **Skill registration** - Created symlink to ensure skill is available in OpenClaw.
+4. **Backfill** - Created missing entry for March 20 (default values as calendar had no events).
+5. **Testing** - Verified calendar-fetch script works for both dates; entry JSON structure correct.
+
+### Current System Status:
+- ms-forms-auto skill: ✅ Installed and documented
+- Pre-fill cron: ✅ Fixed (model corrected to minimax)
+- March 20 entry: ✅ Created
+- March 21 entry: ✅ Pre-created (will be regenerated at 5:45 PM)
+- Auth state: ✅ Valid (storageState.json exists)
+
+### Pending:
+- Need Master's MFA code at 6 PM for today's submission (as per usual flow)
+- Monitor first successful submission with new cron configuration
+
+---
+
 ## Daily Log Summary (2026-03-18)
 
 ### Key Events Today:
@@ -94,19 +116,32 @@ Description: OpenClaw skill for automating Microsoft Forms submission with M365 
 
 **Repo:** https://github.com/ClaireAICodes/ms-forms-auto (PRIVATE)
 **Location:** `/home/ubuntu/.openclaw/workspace/skills/ms-forms-auto/`
+**Installed:** `~/.openclaw/skills/ms-forms-auto` (symlink)
 **Collaborator:** AzureKn1ght (write access)
 
 **Key Details:**
 - Form URL: https://forms.cloud.microsoft/r/LsxLaEv13i
 - 9 questions (6 required, 3 optional): Date, Training Hours, Content Dev Hours/Topic, Learning Hours/Topic, Other Items, Managing Team
-- Auth: Playwright auto-login with M365 credentials (no MFA currently)
-- Config-driven: form-values.json supports defaults + per-date overrides
+- Auth: Playwright auto-login with M365 credentials + number-matching MFA support
+- Dual-calendar integration: Training calendar (TMS) for training hours; Outlook calendar for content dev and other items
+- Config: credentials.json (gitignored), storageState.json (session state), calendars.json (calendar URLs)
 - Credentials stored in config/credentials.json (gitignored, never committed)
 
+**Cron Jobs (Asia/Singapore):**
+- Pre-Fill: 5:45 PM Mon-Fri → Fetches calendars, creates draft entry in `daily-entries/`
+- Submit: 6:00 PM Mon-Fri → Prompts for MFA code, then submits via `submit-with-mfa.js`
+
+**Status (2026-03-21):**
+- Skill installed and symlinked
+- Pre-fill cron fixed: model override removed (now using default minimax)
+- Auth state validated
+- Backfilled March 20 entry (defaults); March 21 entry pre-generated
+
 **Next Steps:**
-- Master Phil needs to provide M365 credentials via `node scripts/setup-credentials.js`
-- First run should be `--headed` to verify login works
-- Then set up cron job for daily submission
+- Monitor first few days of automated submissions
+- Ensure Master provides MFA code promptly at 6 PM
+- Investigate calendar data gaps (currently no events detected, resulting in default values)
+
 
 ## Lessons Learned
 
