@@ -79,7 +79,7 @@ VERDICT_THRESHOLDS:
 
 # Report settings
 REPORT_FORMAT: "markdown"  # markdown, json, or both
-OUTPUT_DIR: "/home/ubuntu/.openclaw/workspace/memory/crypto-reports"
+OUTPUT_DIR: "/home/node/.openclaw/workspace/memory/crypto-reports"
 LOG_LEVEL: "INFO"  # DEBUG, INFO, WARNING, ERROR
 
 # Notification settings (optional)

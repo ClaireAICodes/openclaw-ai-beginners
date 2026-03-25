@@ -40,9 +40,9 @@ Description: A three-component autonomous system that generates improvement idea
 
 **Installation:**
 - Cron jobs installed via `scripts/setup-cron.js`
-- Heartbeat: `0,30 7-22 * * * node /home/ubuntu/.openclaw/workspace/scripts/ideate.js`
-- Morning: `30 6 * * * node /home/ubuntu/.openclaw/workspace/scripts/morning-plan.js`
-- Weekly: `0 7 * * 0 node /home/ubuntu/.openclaw/workspace/scripts/weekly-review.js`
+- Heartbeat: `0,30 7-22 * * * node /home/node/.openclaw/workspace/scripts/ideate.js`
+- Morning: `30 6 * * * node /home/node/.openclaw/workspace/scripts/morning-plan.js`
+- Weekly: `0 7 * * 0 node /home/node/.openclaw/workspace/scripts/weekly-review.js`
 
 **First Ideation:** 2026-03-08 - Generated 5 ideas (email triage, calendar parser, NFT monitor, trading signals, side-hustle scout)
 

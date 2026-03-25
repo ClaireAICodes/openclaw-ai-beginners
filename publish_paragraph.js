@@ -1,11 +1,11 @@
 import { readFile } from 'node:fs/promises';
 
 // Load the skill's tools
-const skillPath = '/home/ubuntu/.openclaw/workspace/skills/paragraph/skill.js';
+const skillPath = '/home/node/.openclaw/workspace/skills/paragraph/skill.js';
 const skillModule = await import(`file://${skillPath}`);
 
 // Get the markdown content
-const markdown = await readFile('/home/ubuntu/.openclaw/workspace-kamiya/BlogPosts/blog-post-2026-03-12-timestamp.md', 'utf8');
+const markdown = await readFile('/home/node/.openclaw/workspace-kamiya/BlogPosts/blog-post-2026-03-12-timestamp.md', 'utf8');
 
 // Set environment variables (they're already set, but ensure in this process)
 process.env.PARAGRAPH_API_KEY = process.env.PARAGRAPH_API_KEY || '7e6d6c82-7d45-4d3d-ae57-972bb1efbbca';

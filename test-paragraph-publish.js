@@ -2,7 +2,7 @@
 process.env.PARAGRAPH_API_KEY = 'e1eb0368-02de-4985-aee9-e56611f5f873';
 process.env.PARAGRAPH_PUBLICATION_SLUG = 'kamiya-ai';
 
-const skillPath = '/home/ubuntu/.openclaw/workspace/skills/paragraph/skill.js';
+const skillPath = '/home/node/.openclaw/workspace/skills/paragraph/skill.js';
 
 async function run() {
   try {

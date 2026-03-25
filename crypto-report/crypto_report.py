@@ -25,7 +25,7 @@ from dataclasses import dataclass, asdict
 from enum import Enum
 
 # Configure paths
-WORKSPACE = Path('/home/ubuntu/.openclaw/workspace')
+WORKSPACE = Path('/home/node/.openclaw/workspace')
 CRYPTO_REPORT_DIR = WORKSPACE / 'crypto-report'
 OUTPUT_DIR = WORKSPACE / 'memory' / 'crypto-reports'
 

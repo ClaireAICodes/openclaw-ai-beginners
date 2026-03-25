@@ -19,7 +19,7 @@ The Daily Kamiya Workspace Sync executed successfully, synchronizing changes fro
 ## What Happened
 
 ### Intended Behavior
-- Detect changes in `/home/ubuntu/.openclaw/workspace-kamiya/`
+- Detect changes in `/home/node/.openclaw/workspace-kamiya/`
 - Stage, commit, and push to origin/master (same repo as main workspace)
 - Run daily at 05:00 UTC (slightly offset from main sync)
 - Ensure blog posts, research, and memory from Kamiya agent are backed up
@@ -64,7 +64,7 @@ The Daily Kamiya Workspace Sync executed successfully, synchronizing changes fro
 
 ### Current Health
 - Exec access now reliably granted to Kamiya cron agent
-- Script `/home/ubuntu/.openclaw/workspace/bin/sync-workspace.sh` works for both main and kamiya workspaces
+- Script `/home/node/.openclaw/workspace/bin/sync-workspace.sh` works for both main and kamiya workspaces
 - Git configuration correct for both workspaces
 - No recent failures
 

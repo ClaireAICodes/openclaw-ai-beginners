@@ -28,7 +28,7 @@ from xml.etree import ElementTree as ET
 
 # ============== Config & Paths ==============
 
-WORKSPACE = Path('/home/ubuntu/.openclaw/workspace')
+WORKSPACE = Path('/home/node/.openclaw/workspace')
 CRYPTO_DIR = WORKSPACE / 'crypto-report'
 CONFIG_PATH = CRYPTO_DIR / 'config.json'
 OUTPUT_DIR = WORKSPACE / 'memory' / 'crypto-reports'

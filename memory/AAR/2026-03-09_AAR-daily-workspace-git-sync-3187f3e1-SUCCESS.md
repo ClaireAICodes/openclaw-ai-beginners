@@ -61,7 +61,7 @@ The daily workspace git sync executed successfully, detecting and pushing change
 
 ### Current Health
 - Exec access now consistent for this job
-- Script `/home/ubuntu/.openclaw/workspace/bin/sync-workspace.sh` running properly
+- Script `/home/node/.openclaw/workspace/bin/sync-workspace.sh` running properly
 - Git remote configured correctly
 - No errors in the actual sync workflow
 

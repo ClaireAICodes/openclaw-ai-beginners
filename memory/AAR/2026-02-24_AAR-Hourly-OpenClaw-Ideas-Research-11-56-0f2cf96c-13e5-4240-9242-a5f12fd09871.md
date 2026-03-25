@@ -17,7 +17,7 @@ Execute the hourly OpenClaw Ideas Research cron job: invent 2 search queries (on
 - Agent selected theme "OpenClaw AI agent automation best practices" and tangential query "AI agent monetization platforms revenue sharing models 2026".
 - Both searches executed successfully; retrieved 20 total results (10 per query).
 - Report compiled: 66KB, 929 lines, with executive summary, two query sections, detailed insights & analysis, full source URLs, and Master Phil-specific recommendations.
-- Report saved correctly as: `/home/ubuntu/.openclaw/workspace-kamiya/Research/OpenClaw Ideas/research-report-2026-02-24T11-56-31.md`.
+- Report saved correctly as: `/home/node/.openclaw/workspace-kamiya/Research/OpenClaw Ideas/research-report-2026-02-24T11-56-31.md`.
 - Memory logging appended successfully to `memory/2026-02-24.md` (added 154 lines; file grew from 1099 to 1253 lines).
 - No errors encountered.
 

@@ -9,7 +9,7 @@ score: 5
 
 ## Daily Workspace Git Sync — AAR
 
-**What we intended:** Execute `/home/ubuntu/.openclaw/workspace/bin/sync-workspace.sh` and send a very short summary of the result (pushed changes or no changes) to the user via Telegram. The job runs daily at 13:00 SGT (05:00 UTC).
+**What we intended:** Execute `/home/node/.openclaw/workspace/bin/sync-workspace.sh` and send a very short summary of the result (pushed changes or no changes) to the user via Telegram. The job runs daily at 13:00 SGT (05:00 UTC).
 
 **What actually happened:** The script executed successfully. It detected local changes, attempted a pull (skipped due to unstaged changes), added all modifications, committed with message "Daily workspace sync: 2026-02-27 05:00", and pushed to GitHub. The push succeeded: 14 files changed, 399 insertions, 86 deletions, new commit `bca1996`. The agent returned the concise summary: "Pushed changes to GitHub (14 files, new commit bca1996)." The summary was delivered automatically via Telegram.
 

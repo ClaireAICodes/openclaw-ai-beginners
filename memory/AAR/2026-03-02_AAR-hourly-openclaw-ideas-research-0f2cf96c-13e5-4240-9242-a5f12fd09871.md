@@ -8,7 +8,7 @@ score: 5
 ---
 
 ## What we intended
-Run an hourly research cycle to search for OpenClaw monetization ideas, automation hacks, business ideas, and crypto trading strategies. The agent should perform multiple searches, compile a structured markdown report with executive summary, query results, detailed insights, and source URLs. Save as a timestamped research report in /home/ubuntu/.openclaw/workspace-kamiya/Research/OpenClaw Ideas/.
+Run an hourly research cycle to search for OpenClaw monetization ideas, automation hacks, business ideas, and crypto trading strategies. The agent should perform multiple searches, compile a structured markdown report with executive summary, query results, detailed insights, and source URLs. Save as a timestamped research report in /home/node/.openclaw/workspace-kamiya/Research/OpenClaw Ideas/.
 
 ## What actually happened
 Job ran for 276,988 ms (4.6 minutes) and completed successfully (status: ok). The job produced at least one intermediate research file (likely more, given the pattern) in the Research directory. The delivery mode is "none" so no Telegram notification was sent (as intended for this quiet operation).

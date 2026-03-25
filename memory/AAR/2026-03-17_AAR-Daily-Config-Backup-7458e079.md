@@ -33,5 +33,5 @@ The job now runs with `hunter-alpha` model and exec access — major improvement
 3. Set timeout to 20+ minutes to avoid timeouts on large backups
 
 ## Action Items
-- Review backup script: `/home/ubuntu/.openclaw/workspace/bin/backup-to-gdrive.sh`
+- Review backup script: `/home/node/.openclaw/workspace/bin/backup-to-gdrive.sh`
 - Consider excluding node_modules and .git from backup scope

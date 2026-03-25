@@ -19,7 +19,7 @@ The daily OpenClaw configuration backup job was terminated by SIGTERM after exce
 ## What Happened
 
 ### Intended Behavior
-- Run `/home/ubuntu/.openclaw/workspace/bin/backup-to-gdrive.sh`
+- Run `/home/node/.openclaw/workspace/bin/backup-to-gdrive.sh`
 - Back up all OpenClaw configuration, skills, memory, and session data to Google Drive
 - Send summary report upon completion
 - Take ~20-30 minutes for full backup (based on previous long runs)

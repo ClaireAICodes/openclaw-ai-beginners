@@ -39,7 +39,7 @@ All research reports were comprehensive, well-structured, and exceeded minimum r
 
 ### What didn't and why:
 
-- **Missing memory log entries** for the runs at 2026-02-28T23:55:00Z and 2026-03-01T00:55:00Z. While the research reports exist and are accessible, the corresponding completion entries were not appended to the daily memory file (`/home/ubuntu/.openclaw/workspace-kamiya/memory/2026-02-28.md` and `2026-03-01.md`). This is likely due to a race condition or transient I/O error during the memory logging step. The error did not propagate to fail the overall job, but it indicates insufficient resilience in the logging mechanism.
+- **Missing memory log entries** for the runs at 2026-02-28T23:55:00Z and 2026-03-01T00:55:00Z. While the research reports exist and are accessible, the corresponding completion entries were not appended to the daily memory file (`/home/node/.openclaw/workspace-kamiya/memory/2026-02-28.md` and `2026-03-01.md`). This is likely due to a race condition or transient I/O error during the memory logging step. The error did not propagate to fail the overall job, but it indicates insufficient resilience in the logging mechanism.
 
 ### One concrete improvement for next time:
 

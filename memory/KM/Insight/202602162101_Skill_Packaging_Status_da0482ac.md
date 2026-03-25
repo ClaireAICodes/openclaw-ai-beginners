@@ -13,7 +13,7 @@ content_hash: "da0482ac2e8e835b"
 ---
 
 ✅ **Package ready for ClawHub:**
-- Location: `/home/ubuntu/.openclaw/workspace/skills/knowledge-management/`
+- Location: `/home/node/.openclaw/workspace/skills/knowledge-management/`
 - Contents: `SKILL.md`, `README.md`, `index-local.js`, `package.json`, `LICENSE`, `.gitignore`
 - Metadata: name, description, homepage, emoji, bins (km)
 - Git repository: clean, on branch master

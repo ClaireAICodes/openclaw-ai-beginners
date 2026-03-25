@@ -16,7 +16,7 @@ Established: 2026-02-15
 Description: Robust daily backup of all OpenClaw configuration and workspace data to Google Drive using a dedicated script with deduplication, cleanup, and reliable model routing.
 
 **Components:**
-- Backup script: `/home/ubuntu/.openclaw/workspace/backup-to-gdrive.sh`
+- Backup script: `/home/node/.openclaw/workspace/backup-to-gdrive.sh`
 - Cron job: `Daily OpenClaw Configuration Backup` (ID: 43198751-737a-4aa7-8b7e-72893f5d93b6)
 - Destination: Google Drive folder "OpenClaw Backups/YYYY-MM-DD"
 - Model: `cloudflare-ai-gateway/claude-sonnet-4-5` (paid, reliable)

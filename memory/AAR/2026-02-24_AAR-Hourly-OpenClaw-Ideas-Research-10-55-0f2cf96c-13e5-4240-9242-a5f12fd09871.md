@@ -17,7 +17,7 @@ Execute the hourly OpenClaw Ideas Research cron job: invent 2 search queries (on
 - Agent randomly selected theme "OpenClaw cryptocurrency blockchain integration" and invented tangential query "AI agent tokenization platforms crypto revenue models 2026".
 - Both searches executed successfully via web_search; retrieved 20 total results (10 per query).
 - Report compiled: 20KB with executive summary, two query sections (each with 10 results: title, URL, summary), detailed insights & analysis, full source URLs, and actionable recommendations.
-- Report saved correctly as: `/home/ubuntu/.openclaw/workspace-kamiya/Research/OpenClaw Ideas/research-report-2026-02-24T10-55-00.md`.
+- Report saved correctly as: `/home/node/.openclaw/workspace-kamiya/Research/OpenClaw Ideas/research-report-2026-02-24T10-55-00.md`.
 - Memory logging completed successfully in `memory/2026-02-24.md` (appended comprehensive entry).
 - No errors reported.
 

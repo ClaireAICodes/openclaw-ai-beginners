@@ -34,7 +34,7 @@ function resolveWorkspace() {
   }
 
   // Priority 4: Hardcoded default (maintains backward compatibility for cron)
-  return path.resolve('/home/ubuntu/.openclaw/workspace');
+  return path.resolve('/home/node/.openclaw/workspace');
 }
 
 const WORKSPACE = resolveWorkspace();

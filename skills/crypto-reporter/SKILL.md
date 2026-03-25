@@ -87,7 +87,7 @@ The generated report includes:
 
 ## Configuration
 
-The skill uses a configuration file at `/home/ubuntu/.openclaw/workspace/crypto-report/config.yaml`.
+The skill uses a configuration file at `/home/node/.openclaw/workspace/crypto-report/config.yaml`.
 
 ### Key Configuration Options
 
@@ -118,7 +118,7 @@ VERDICT_WEIGHTS:
   risks: 0.25
 
 # Output settings
-OUTPUT_DIR: "/home/ubuntu/.openclaw/workspace/memory/crypto-reports"
+OUTPUT_DIR: "/home/node/.openclaw/workspace/memory/crypto-reports"
 REPORT_FORMAT: "markdown"  # or "json" / "both"
 ```
 

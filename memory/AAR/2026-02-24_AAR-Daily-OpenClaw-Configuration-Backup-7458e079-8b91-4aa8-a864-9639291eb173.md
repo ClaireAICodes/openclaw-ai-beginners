@@ -13,7 +13,7 @@ score: 5
 
 **What Actually Happened:**
 - The backup script executed and ran for approximately 18.6 minutes.
-- It systematically uploaded the entire `/home/ubuntu/.openclaw/workspace` tree to Google Drive, including:
+- It systematically uploaded the entire `/home/node/.openclaw/workspace` tree to Google Drive, including:
   - `agents/main/sessions/` (active, reset, and `.deleted` session logs)
   - `identity/` (core identity files)
   - `cron/` (cron job definitions)

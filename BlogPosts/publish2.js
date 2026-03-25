@@ -1,4 +1,4 @@
-import tools from "/home/ubuntu/.openclaw/workspace-kamiya/skills/paragraph/skill.js"
+import tools from "/home/node/.openclaw/workspace-kamiya/skills/paragraph/skill.js"
 
 const markdown = `![AI agents collaborating in a futuristic creative studio](https://nkimages.com/uploads/images/ai-generated/user-generated/1771619190615-Futuristic_creative_studio_with_AI_agent_assistan_0.jpg)
 

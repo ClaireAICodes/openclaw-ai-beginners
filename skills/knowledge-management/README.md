@@ -181,8 +181,8 @@ The sync state (`memory/local-sync-state.json`) tracks which entries have been e
 
 ```json
 {
-  "e4b30e75d0f5a662": "/home/ubuntu/.openclaw/workspace/Research/202602151440_GitHub_Documentation_Standardization_Protocol_e4b30e75.md",
-  "a70f85d63fa7f842": "/home/ubuntu/.openclaw/workspace/Reference/202602151440_GitHub_Collaborator_Access_Policy_a70f85d.md"
+  "e4b30e75d0f5a662": "/home/node/.openclaw/workspace/Research/202602151440_GitHub_Documentation_Standardization_Protocol_e4b30e75.md",
+  "a70f85d63fa7f842": "/home/node/.openclaw/workspace/Reference/202602151440_GitHub_Collaborator_Access_Policy_a70f85d.md"
 }
 ```
 
@@ -196,7 +196,7 @@ This enables:
 ## Troubleshooting
 
 **"Unknown tool" or "km: command not found"**
-- Ensure `~/workspace/bin` is in your PATH, or call via full path: `/home/ubuntu/.openclaw/workspace/bin/km`
+- Ensure `~/workspace/bin` is in your PATH, or call via full path: `/home/node/.openclaw/workspace/bin/km`
 - Run `npm link` in the skill directory to register globally
 
 **No entries found**
@@ -230,7 +230,7 @@ openclaw cron add \
 
 **Via system crontab:**
 ```bash
-0 */6 * * * export WORKSPACE=/home/ubuntu/.openclaw/workspace && /home/ubuntu/.openclaw/workspace/bin/km sync --days_back 7 --cleanup
+0 */6 * * * export WORKSPACE=/home/node/.openclaw/workspace && /home/node/.openclaw/workspace/bin/km sync --days_back 7 --cleanup
 ```
 
 ---

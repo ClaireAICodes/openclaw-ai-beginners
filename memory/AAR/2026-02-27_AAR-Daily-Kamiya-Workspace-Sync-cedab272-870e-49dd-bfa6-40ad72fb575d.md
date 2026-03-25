@@ -9,7 +9,7 @@ score: 5
 
 ## Daily Kamiya Workspace Sync — AAR
 
-**What we intended:** Execute `/home/ubuntu/.openclaw/workspace/bin/sync-kamiya.sh` and send a very short summary of the result (pushed changes or no changes) to the user via Telegram. The job runs daily at 13:00 SGT (05:00 UTC).
+**What we intended:** Execute `/home/node/.openclaw/workspace/bin/sync-kamiya.sh` and send a very short summary of the result (pushed changes or no changes) to the user via Telegram. The job runs daily at 13:00 SGT (05:00 UTC).
 
 **What actually happened:** The script executed without errors. It detected local changes, attempted a pull (skipped due to unstaged changes), added modifications, committed with message "Daily Kamiya workspace sync: 2026-02-27 05:00", and pushed successfully. The push included 46 files changed, 8768 insertions, 121 deletions. The agent returned the concise summary: "✓ Workspace sync complete. Changes pushed to GitHub (46 files, 8.8k lines)." The summary was delivered as plain text, automatically routed via Telegram.
 

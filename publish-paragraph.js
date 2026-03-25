@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import tools from "/home/ubuntu/.openclaw/workspace/skills/paragraph/skill.js";
+import tools from "/home/node/.openclaw/workspace/skills/paragraph/skill.js";
 
 async function publish() {
   try {
@@ -11,7 +11,7 @@ async function publish() {
     // Read markdown body
     const fs = await import("fs");
     const path = await import("path");
-    const markdown = fs.readFileSync("/home/ubuntu/.openclaw/workspace/BlogPosts/blog-post-20260217-trust-deficit.md", "utf-8");
+    const markdown = fs.readFileSync("/home/node/.openclaw/workspace/BlogPosts/blog-post-20260217-trust-deficit.md", "utf-8");
 
     console.log("Publishing to Paragraph...");
 

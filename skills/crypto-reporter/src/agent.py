@@ -22,7 +22,7 @@ from typing import Dict, List, Any, Optional
 
 # ============== Configuration & Setup ==============
 
-WORKSPACE = Path('/home/ubuntu/.openclaw/workspace')
+WORKSPACE = Path('/home/node/.openclaw/workspace')
 CRYPTO_DIR = WORKSPACE / 'crypto-report'
 CONFIG_FILE = CRYPTO_DIR / 'config.yaml'
 OUTPUT_DIR = WORKSPACE / 'memory' / 'crypto-reports'

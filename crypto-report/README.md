@@ -31,7 +31,7 @@ Every day at 6:00 AM UTC, the system automatically:
 - `src/crypto_reporter.py` - Main standalone script (no external dependencies!)
 - `config.json` - Asset list, weights, and settings
 - `bin/crypto-reporter.sh` - Optional wrapper script
-- Reports output to: `/home/ubuntu/.openclaw/workspace/memory/crypto-reports/`
+- Reports output to: `/home/node/.openclaw/workspace/memory/crypto-reports/`
 
 ### Tracked Assets
 - BTC (Bitcoin) - bitcoin
@@ -66,7 +66,7 @@ Risks:        25% (Regulatory, market risks)
 
 ### Manual Run
 ```bash
-python3 /home/ubuntu/.openclaw/workspace/crypto-report/src/crypto_reporter.py
+python3 /home/node/.openclaw/workspace/crypto-report/src/crypto_reporter.py
 ```
 
 ### Cron Job (Already Set Up)

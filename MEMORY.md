@@ -115,7 +115,7 @@ Established: 2026-03-18
 Description: OpenClaw skill for automating Microsoft Forms submission with M365 auto-login via Playwright. Built to automate Master Phil's daily org activity log form.
 
 **Repo:** https://github.com/ClaireAICodes/ms-forms-auto (PRIVATE)
-**Location:** `/home/ubuntu/.openclaw/workspace/skills/ms-forms-auto/`
+**Location:** `/home/node/.openclaw/workspace/skills/ms-forms-auto/`
 **Installed:** `~/.openclaw/skills/ms-forms-auto` (symlink)
 **Collaborator:** AzureKn1ght (write access)
 
@@ -187,9 +187,9 @@ Description: A three-component autonomous system that generates improvement idea
 
 **Installation:**
 - Cron jobs installed via `scripts/setup-cron.js`
-- Heartbeat: `0,30 7-22 * * * node /home/ubuntu/.openclaw/workspace/scripts/ideate.js`
-- Morning: `30 6 * * * node /home/ubuntu/.openclaw/workspace/scripts/morning-plan.js`
-- Weekly: `0 7 * * 0 node /home/ubuntu/.openclaw/workspace/scripts/weekly-review.js`
+- Heartbeat: `0,30 7-22 * * * node /home/node/.openclaw/workspace/scripts/ideate.js`
+- Morning: `30 6 * * * node /home/node/.openclaw/workspace/scripts/morning-plan.js`
+- Weekly: `0 7 * * 0 node /home/node/.openclaw/workspace/scripts/weekly-review.js`
 
 **First Ideation:** 2026-03-08 - Generated 5 ideas (email triage, calendar parser, NFT monitor, trading signals, side-hustle scout)
 

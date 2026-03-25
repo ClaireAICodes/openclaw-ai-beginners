@@ -24,7 +24,7 @@ Perform a comprehensive research session to search for OpenClaw monetization ide
   - Detailed analysis and synthesis (monetization strategies, technical considerations, market opportunities)
   - Conclusion with 5 recommendations
   - Full source URLs list (20 total)
-- Saved to `/home/ubuntu/.openclaw/workspace-kamiya/Research/OpenClaw Ideas/research-report-2026-03-07T14-55-00.md`
+- Saved to `/home/node/.openclaw/workspace-kamiya/Research/OpenClaw Ideas/research-report-2026-03-07T14-55-00.md`
 - Updated `memory/2026-03-07.md` with a follow-up entry noting completion
 - No Telegram notifications sent (as instructed for success)
 

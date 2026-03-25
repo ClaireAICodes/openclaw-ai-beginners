@@ -11,7 +11,7 @@ score: 5
 ## After-Action Review (AAR)
 
 ### What We Intended
-Execute the workspace sync script (`/home/ubuntu/.openclaw/workspace/bin/sync-workspace.sh`) to commit any local changes and push to the GitHub repository. Send a very short summary (e.g., number of files changed) to the user via Telegram.
+Execute the workspace sync script (`/home/node/.openclaw/workspace/bin/sync-workspace.sh`) to commit any local changes and push to the GitHub repository. Send a very short summary (e.g., number of files changed) to the user via Telegram.
 
 ### What Actually Happened
 The job ran at 05:00 UTC on 2026-02-28 and completed successfully. The push included 12 files changed, with 268 insertions and 27 deletions. The cron summary clearly stated "✅ Daily workspace sync: **Changes pushed** (12 files, 268 insertions, 27 deletions)". The Telegram notification was presumably delivered (no error in summary).

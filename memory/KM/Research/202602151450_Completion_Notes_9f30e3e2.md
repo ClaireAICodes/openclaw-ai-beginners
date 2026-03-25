@@ -12,7 +12,7 @@ date: "2026-02-13"
 content_hash: "9f30e3e2d3822079"
 ---
 
-All searches completed successfully. Exa MCP tool located at `/home/ubuntu/.nvm/versions/node/v24.13.0/lib/node_modules/openclaw/skills/exa-mcp/bin/exa-mcp` and used with full path. Report compiled with comprehensive formatting, executive summary, detailed insights, and concrete action items. Directory structure created as required.
+All searches completed successfully. Exa MCP tool located at `/home/node/.nvm/versions/node/v24.13.0/lib/node_modules/openclaw/skills/exa-mcp/bin/exa-mcp` and used with full path. Report compiled with comprehensive formatting, executive summary, detailed insights, and concrete action items. Directory structure created as required.
 
 **Report Quality:** High — structured, actionable, with specific resource URLs and configuration examples. Designed for immediate implementation.
 

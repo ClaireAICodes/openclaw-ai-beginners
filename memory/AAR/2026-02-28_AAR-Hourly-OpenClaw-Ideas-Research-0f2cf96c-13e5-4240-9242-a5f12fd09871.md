@@ -15,8 +15,8 @@ score: 4
 - Created appropriate search queries covering OpenClaw AI agent automation best practices and cryptocurrency integration/trading strategies
 - Executed multiple web searches (the transcript shows at least 4 different search queries executed, though the cron spec only requires 2—this is actually over-delivery)
 - Compiled a comprehensive 15+ KB markdown report with executive summary, query results, detailed insights, full source URLs, and conclusions
-- Saved the report to `/home/ubuntu/.openclaw/workspace-kamiya/Research/OpenClaw Ideas/research-report-2026-02-28T21-55-00.md`
-- Attempted to log completion in memory file `/home/ubuntu/.openclaw/workspace-kamiya/memory/2026-02-28.md`
+- Saved the report to `/home/node/.openclaw/workspace-kamiya/Research/OpenClaw Ideas/research-report-2026-02-28T21-55-00.md`
+- Attempted to log completion in memory file `/home/node/.openclaw/workspace-kamiya/memory/2026-02-28.md`
 
 However, the cron job final status was marked as "error" with the message: `cron delivery target is missing`. This appears to be a configuration issue with the cron delivery system's attempt to send a notification (even though the instructions explicitly said not to send notifications on success). The research work itself was fully completed and of high quality.
 

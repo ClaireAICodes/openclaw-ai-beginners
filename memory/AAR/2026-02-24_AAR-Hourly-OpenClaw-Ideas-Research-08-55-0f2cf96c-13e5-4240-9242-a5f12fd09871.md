@@ -16,7 +16,7 @@ Execute the hourly OpenClaw Ideas Research cron job: invent 8 search queries (5 
 - The job executed at 08:55 UTC (session: 1bb45a89-3743-4200-b810-52e43aa8490d).
 - Agent executed 9 search queries covering ethics, serverless deployment, session isolation, hardware acceleration, backup/DR, mobile deployment, telemetry, i18n, and CI/CD.
 - Collected 90+ sources and compiled a 47 KB report.
-- Report saved correctly as: `/home/ubuntu/.openclaw/workspace-kamiya/Research/OpenClaw Ideas/research-report-2026-02-24T08-55-00.md`.
+- Report saved correctly as: `/home/node/.openclaw/workspace-kamiya/Research/OpenClaw Ideas/research-report-2026-02-24T08-55-00.md`.
 - Memory logging completed successfully in `memory/2026-02-24.md`.
 - No errors reported.
 

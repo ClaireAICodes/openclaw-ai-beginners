@@ -9,7 +9,7 @@ score: 5
 
 ## After-Action Review: Daily OpenClaw Configuration Backup
 
-**What we intended:** Execute the backup script `/home/ubuntu/.openclaw/workspace/bin/backup-to-gdrive.sh` to upload all workspace data to Google Drive, with the script sending its own success summary on completion.
+**What we intended:** Execute the backup script `/home/node/.openclaw/workspace/bin/backup-to-gdrive.sh` to upload all workspace data to Google Drive, with the script sending its own success summary on completion.
 
 **What actually happened:** The backup job executed successfully and ran for approximately 20 minutes (1,214,871 ms). The transcript shows the script methodically processing the workspace directories in a specific order: skills, memory, bin, agents (in progress), then identity, then cron, followed by housekeeping. The backup was uploading session files from the agents directory when the monitoring session encountered a context length exceeded error due to the sheer volume of log data accumulated. However, this error was in the monitoring agent, not the backup script itself. The backup script continued its work and completed successfully, as evidenced by the job status being "ok" and the next run being scheduled normally.
 

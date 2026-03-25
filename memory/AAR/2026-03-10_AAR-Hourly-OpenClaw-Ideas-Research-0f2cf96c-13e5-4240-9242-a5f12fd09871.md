@@ -9,7 +9,7 @@ score: 5
 
 ## After-Action Review: Hourly OpenClaw Ideas Research
 
-**What we intended:** Run hourly research sessions to search for OpenClaw monetization ideas, automation hacks, business ideas, and crypto trading strategies. Each run should: invent two new search queries (one directly related to OpenClaw themes, one tangential), execute them via web_search, compile results into a well-structured markdown report with executive summary, detailed insights, full source URLs, and save to `/home/ubuntu/.openclaw/workspace-kamiya/Research/OpenClaw Ideas/` with a timestamped filename. No Telegram notifications on success.
+**What we intended:** Run hourly research sessions to search for OpenClaw monetization ideas, automation hacks, business ideas, and crypto trading strategies. Each run should: invent two new search queries (one directly related to OpenClaw themes, one tangential), execute them via web_search, compile results into a well-structured markdown report with executive summary, detailed insights, full source URLs, and save to `/home/node/.openclaw/workspace-kamiya/Research/OpenClaw Ideas/` with a timestamped filename. No Telegram notifications on success.
 
 **What actually happened:** The job ran at 11:35 UTC ( approx) and completed successfully in ~75 seconds. The agent performed two web searches, collected results, and generated a research report saved to the expected location. The report followed the required structure with an executive summary, query sections containing titles/summaries/sources, and analysis. The agent did not send any Telegram messages, as instructed. The run count and consecutive error count remain at zero, indicating stable operation.
 

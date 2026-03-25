@@ -11,7 +11,7 @@ score: 4
 
 **What we intended:** Run the crypto reporter script daily at 06:00 UTC to generate a comprehensive market analysis covering 10 major assets (BTC, ETH, SOL, ADA, LINK, AVAX, DOT, UNI, AAVE, MKR) with technical indicators, sentiment analysis, risk assessment, and a HOLD/SELL/BUY verdict.
 
-**What actually happened:** The script executed successfully (exit code 0) and produced the report at `/home/ubuntu/.openclaw/workspace/memory/crypto-reports/crypto-report-2026-02-27.md`. The report included all expected sections: executive summary (Market Verdict: HOLD, Confidence 5.45/10), asset price table, BTC technical indicators, fundamentals, sentiment analysis, top headlines, risk assessment, and methodology notes.
+**What actually happened:** The script executed successfully (exit code 0) and produced the report at `/home/node/.openclaw/workspace/memory/crypto-reports/crypto-report-2026-02-27.md`. The report included all expected sections: executive summary (Market Verdict: HOLD, Confidence 5.45/10), asset price table, BTC technical indicators, fundamentals, sentiment analysis, top headlines, risk assessment, and methodology notes.
 
 **What went well:**
 - Report generated on schedule and saved correctly

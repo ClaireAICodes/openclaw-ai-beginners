@@ -22,7 +22,7 @@ This job has become **stable and reliable** after earlier tooling issues. It's f
 ## What Happened
 
 ### Intended Behavior
-- Execute `/home/ubuntu/.openclaw/workspace/crypto-report/src/crypto_reporter.py`
+- Execute `/home/node/.openclaw/workspace/crypto-report/src/crypto_reporter.py`
 - Gather market data for BTC, ETH, SOL, ADA, LINK, AVAX, DOT, UNI, AAVE, MKR
 - Analyze technical indicators, fundamentals, sentiment
 - Generate markdown report with verdict and confidence

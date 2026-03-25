@@ -17,7 +17,7 @@ Description: Standard protocol for integrating Exa MCP server tools into OpenCla
 
 **Skill Details:**
 - **Name:** exa-mcp
-- **Location:** `/home/ubuntu/.nvm/versions/node/v24.13.0/lib/node_modules/openclaw/skills/exa-mcp/`
+- **Location:** `/home/node/.nvm/versions/node/v24.13.0/lib/node_modules/openclaw/skills/exa-mcp/`
 - **Binary:** `exa-mcp` (executable Node.js script)
 - **Required Environment Variable:** `EXA_API_KEY`
 - **Tools Available:** web_search_exa, web_search_advanced_exa, get_code_context_exa, crawling_exa, company_research_exa, people_search_exa, deep_researcher_start, deep_researcher_check

@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises';
 
-const skillPath = '/home/ubuntu/.openclaw/workspace/skills/paragraph/skill.js';
+const skillPath = '/home/node/.openclaw/workspace/skills/paragraph/skill.js';
 const skillModule = await import(`file://${skillPath}`);
 
 process.env.PARAGRAPH_API_KEY = process.env.PARAGRAPH_API_KEY || '7e6d6c82-7d45-4d3d-ae57-972bb1efbbca';

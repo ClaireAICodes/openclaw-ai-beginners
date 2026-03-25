@@ -14,7 +14,7 @@ score: 4
 **Execution Time:** 2026-02-26T05:00:19 UTC (duration ~19s)
 
 ### What we intended
-Execute `/home/ubuntu/.openclaw/workspace/bin/sync-kamiya.sh` to sync the Kamiya workspace with GitHub, then send a very short summary of the result to the user via Telegram (whether changes were pushed or none).
+Execute `/home/node/.openclaw/workspace/bin/sync-kamiya.sh` to sync the Kamiya workspace with GitHub, then send a very short summary of the result to the user via Telegram (whether changes were pushed or none).
 
 ### What actually happened
 - Ran `sync-kamiya.sh` successfully.

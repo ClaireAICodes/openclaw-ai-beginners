@@ -14,7 +14,7 @@ score: 5
 The Hourly OpenClaw Ideas Research job aims to perform comprehensive research on OpenClaw monetization, automation, business ideas, and crypto trading strategies. Every hour, the agent invents two search queries (one themed, one tangential), executes them, compiles a structured markdown report with executive summary, results, analysis, and source URLs, saves it to the Research folder, and logs completion in the daily memory file. No Telegram notifications are sent on success.
 
 ### What Actually Happened
-The job executed on 2026-02-28 at 06:55 UTC and completed successfully within approximately 1-2 minutes. The agent generated a fresh research report (timestamped 06:55) containing 20 search results across two queries, full analysis, and actionable insights. The report was saved to `/home/ubuntu/.openclaw/workspace-kamiya/Research/OpenClaw Ideas/research-report-2026-02-28T06-55-00.md`. The daily memory log was updated. No Telegram notifications were sent as instructed.
+The job executed on 2026-02-28 at 06:55 UTC and completed successfully within approximately 1-2 minutes. The agent generated a fresh research report (timestamped 06:55) containing 20 search results across two queries, full analysis, and actionable insights. The report was saved to `/home/node/.openclaw/workspace-kamiya/Research/OpenClaw Ideas/research-report-2026-02-28T06-55-00.md`. The daily memory log was updated. No Telegram notifications were sent as instructed.
 
 ### What Went Well
 - Consistent execution: The job has run reliably for many hours, demonstrating robust scheduling and error handling.

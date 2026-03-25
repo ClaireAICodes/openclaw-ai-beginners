@@ -2,7 +2,7 @@
 
 **Date**: 2026-02-14
 **Status**: ✅ Production Ready
-**Location**: `/home/ubuntu/.nvm/versions/node/v24.13.0/lib/node_modules/openclaw/skills/paragraph/`
+**Location**: `/home/node/.nvm/versions/node/v24.13.0/lib/node_modules/openclaw/skills/paragraph/`
 
 ---
 

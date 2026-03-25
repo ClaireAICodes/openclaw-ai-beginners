@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises';
 import { moduleProvider } from 'node:module';
 
 async function loadSkill() {
-  const skillPath = '/home/ubuntu/.openclaw/workspace/skills/paragraph/skill.js';
+  const skillPath = '/home/node/.openclaw/workspace/skills/paragraph/skill.js';
   const skillCode = await readFile(skillPath, 'utf-8');
 
   // Create a module context with proper env vars
@@ -36,7 +36,7 @@ async function loadSkill() {
   try {
     // Run test.js with explicit env vars
     const { stdout, stderr } = await execAsync(
-      `PARAGRAPH_API_KEY="e1eb0368-02de-4985-aee9-e56611f5f873" PARAGRAPH_PUBLICATION_SLUG="kamiya-ai" node /home/ubuntu/.openclaw/workspace/skills/paragraph/test.js`,
+      `PARAGRAPH_API_KEY="e1eb0368-02de-4985-aee9-e56611f5f873" PARAGRAPH_PUBLICATION_SLUG="kamiya-ai" node /home/node/.openclaw/workspace/skills/paragraph/test.js`,
       { maxBuffer: 1024 * 1024 }
     );
     console.log('STDOUT:', stdout);

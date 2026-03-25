@@ -11,10 +11,10 @@ score: 4
 ## After-Action Review (AAR)
 
 ### What We Intended
-Execute the Python crypto reporter script (`/home/ubuntu/.openclaw/workspace/crypto-report/src/crypto_reporter.py`) to generate a daily market analysis report covering fundamentals, technicals, sentiment, risks, and a verdict. On success, save the report and optionally send a summary; on failure, send error details.
+Execute the Python crypto reporter script (`/home/node/.openclaw/workspace/crypto-report/src/crypto_reporter.py`) to generate a daily market analysis report covering fundamentals, technicals, sentiment, risks, and a verdict. On success, save the report and optionally send a summary; on failure, send error details.
 
 ### What Actually Happened
-The job ran at 06:00 UTC on 2026-02-28 and completed with exit code 0. The script produced a markdown report (expected location: `/home/ubuntu/.openclaw/workspace/memory/crypto-reports/crypto-report-2026-02-28.md`) and updated the `crypto-report-latest.md` symlink. The cron summary displayed "Let me check the execution progress:" indicating the transcript capture was incomplete, but the overall status was ok. No error notifications were sent.
+The job ran at 06:00 UTC on 2026-02-28 and completed with exit code 0. The script produced a markdown report (expected location: `/home/node/.openclaw/workspace/memory/crypto-reports/crypto-report-2026-02-28.md`) and updated the `crypto-report-latest.md` symlink. The cron summary displayed "Let me check the execution progress:" indicating the transcript capture was incomplete, but the overall status was ok. No error notifications were sent.
 
 ### What Went Well
 - The reporter executed reliably despite potential API rate limits (previous runs showed graceful fallbacks).

@@ -76,7 +76,7 @@ content_hash: "db98984aa5f7f6b0"
 5. Implement continuous cost monitoring across all running agents.
 
 **Resource References:**
-- All 25 research reports stored in `/home/ubuntu/.openclaw/workspace-kamiya/Research/OpenClaw Ideas/` with timestamps.
+- All 25 research reports stored in `/home/node/.openclaw/workspace-kamiya/Research/OpenClaw Ideas/` with timestamps.
 - Full source URLs and detailed analysis preserved for future deep dives.
 
 ---

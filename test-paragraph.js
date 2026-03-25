@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import tools from "/home/ubuntu/.openclaw/workspace/skills/paragraph/skill.js";
+import tools from "/home/node/.openclaw/workspace/skills/paragraph/skill.js";
 
 async function test() {
   const result = await tools.paragraph_testConnection({});

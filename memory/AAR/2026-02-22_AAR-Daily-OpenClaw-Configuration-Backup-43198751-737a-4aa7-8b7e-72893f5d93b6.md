@@ -9,7 +9,7 @@ score: 2
 
 The scheduled backup script was killed by SIGKILL after ~24.5 minutes, resulting in an incomplete backup.
 
-**Intended:** Execute `/home/ubuntu/.openclaw/workspace/bin/backup-to-gdrive.sh` to upload the entire workspace (excluding `workspace-kamiya`) to Google Drive under `OpenClaw Backups/2026-02-22/`, including all agent session data.
+**Intended:** Execute `/home/node/.openclaw/workspace/bin/backup-to-gdrive.sh` to upload the entire workspace (excluding `workspace-kamiya`) to Google Drive under `OpenClaw Backups/2026-02-22/`, including all agent session data.
 
 **What happened:** The script successfully uploaded top-level directories: skills, memory, Research, bin, and the identity and cron directories. It also created the agents subfolder structure. While uploading agent sessions (starting with kamiya agent), the process received SIGKILL at ~24.5 minutes. The agents directory was only partially populated: backup-agent's sessions folder was essentially empty (only `sessions.json`), and kamiya's sessions folder contained an unknown number of files (listing showed pagination) but did not complete. The script did not exit normally and did not send the completion summary.
 

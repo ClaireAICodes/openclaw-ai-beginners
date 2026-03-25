@@ -14,7 +14,7 @@ score: 5
 **Execution Time:** 2026-02-26T06:00:06 UTC (duration ~67s)
 
 ### What we intended
-Execute `/home/ubuntu/.openclaw/workspace/crypto-report/src/crypto_reporter.py` to generate a comprehensive daily cryptocurrency market report. Verify completion; if errors occur, send a failure summary.
+Execute `/home/node/.openclaw/workspace/crypto-report/src/crypto_reporter.py` to generate a comprehensive daily cryptocurrency market report. Verify completion; if errors occur, send a failure summary.
 
 ### What actually happened
 - Script launched and began fetching data from multiple APIs (CoinGecko, Alternative.me, Blockchair, RSS feeds).
@@ -23,7 +23,7 @@ Execute `/home/ubuntu/.openclaw/workspace/crypto-report/src/crypto_reporter.py` 
 - Fetched global market metrics, Fear & Greed index, and news from RSS feeds.
 - Calculated scores: Fundamentals (4.65), Technicals (5.57), Sentiment (1.55), Risks_adjusted (5.0).
 - Final verdict: HOLD with confidence 4.35/10.
-- Report saved to `/home/ubuntu/.openclaw/workspace/memory/crypto-reports/crypto-report-2026-02-26.md`.
+- Report saved to `/home/node/.openclaw/workspace/memory/crypto-reports/crypto-report-2026-02-26.md`.
 - Symlink `crypto-report-latest.md` updated.
 - Exit code 0 (success).
 

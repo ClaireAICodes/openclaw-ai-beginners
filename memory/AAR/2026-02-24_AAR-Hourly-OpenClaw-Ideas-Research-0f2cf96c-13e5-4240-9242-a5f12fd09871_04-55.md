@@ -14,7 +14,7 @@ score: 3
 **What Actually Happened:**
 - Crafted two targeted queries and executed both searches successfully, retrieving 20 high-quality sources.
 - Compiled a comprehensive report (20,927 bytes) with executive summary, detailed query results, strategic insights, and full source URLs.
-- Saved the report as `/home/ubuntu/.openclaw/workspace-kamiya/Research/OpenClaw Ideas/research-report-2026-02-24T05-55-00.md` (note: timestamp reflects intended run time; actual file may have different timestamp if overwritten later)
+- Saved the report as `/home/node/.openclaw/workspace-kamiya/Research/OpenClaw Ideas/research-report-2026-02-24T05-55-00.md` (note: timestamp reflects intended run time; actual file may have different timestamp if overwritten later)
 - Attempted to update today's memory file, but the edit operation failed due to non-unique text match: "Found 3 occurrences of the text... must be unique."
 - The job finished without retrying the memory log, leaving today's memory file without an entry for this session.
 - Total execution time: ~2.35 minutes (141,773 ms for previous similar run; this one likely comparable).
