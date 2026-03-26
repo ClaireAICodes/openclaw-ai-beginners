@@ -1396,7 +1396,7 @@ def main():
                 # Send email via gog
                 logger.info(f"Sending email to {email_recipient} via gog...")
                 result = subprocess.run(
-                    ['gog', 'gmail', 'send', '--to', email_recipient, '--subject', subject, '--body-html', html_body],
+                    ['/home/linuxbrew/.linuxbrew/bin/gog', 'gmail', 'send', '--to', email_recipient, '--subject', subject, '--body-html', html_body],
                     capture_output=True,
                     text=True,
                     timeout=30
@@ -1413,7 +1413,7 @@ def main():
                 # Send email via gog with HTML content directly
                 logger.info(f"Sending email to {email_recipient} via gog...")
                 result = subprocess.run(
-                    ['gog', 'gmail', 'send', '--to', email_recipient, '--subject', subject, '--body-html', html_body],
+                    ['/home/linuxbrew/.linuxbrew/bin/gog', 'gmail', 'send', '--to', email_recipient, '--subject', subject, '--body-html', html_body],
                     capture_output=True,
                     text=True,
                     timeout=30
