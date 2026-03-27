@@ -143,6 +143,70 @@ Description: OpenClaw skill for automating Microsoft Forms submission with M365 
 - Investigate calendar data gaps (currently no events detected, resulting in default values)
 
 
+## Design Standards
+
+### Glassmorphism Dark Theme
+Established: 2026-03-26 (gym-workout-health-longevity site)
+Description: A modern, premium design system featuring dark gradient backgrounds, translucent glass panels, animated floating elements, and refined typography. Suitable for professional showcases, product landing pages, and high-end presentation sites.
+
+**Color Palette:**
+- Background gradient: `linear-gradient(180deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)`
+- Glass card background: `rgba(30, 41, 59, 0.7)`
+- Glass border: `rgba(255, 255, 255, 0.1)`
+- Glass shadow: `0 25px 50px -12px rgba(0, 0, 0, 0.5)`
+- Primary text: `#f8fafc`
+- Secondary text: `#94a3b8`
+- Accent color: `#38bdf8` (sky blue)
+- Accent glow: `rgba(56, 189, 248, 0.3)`
+- Success color: `#34d399`
+
+**Typography:**
+- Headings: **Playfair Display** (700, 800 weights) – elegant serif for high impact
+- Body: **Inter** (300, 400, 500, 600, 700, 800) – clean, modern sans-serif
+- Font source: Google Fonts
+- Heading gradient effect: `linear-gradient(135deg, #fff 0%, var(--accent) 50%, #a78bfa 100%)` with `-webkit-background-clip: text`
+
+**Glassmorphism Parameters:**
+- Border radius: `24–28px`
+- Backdrop blur: `12–20px` (with `-webkit-backdrop-filter` for Safari)
+- Glass tint: `rgba(255, 255, 255, 0.12)` base, varied with `0.15` in CTAs
+- Top accent bar: `4px` gradient line (accent to purple)
+- Hover transform: `translateY(-10px) scale(1.01)` with stronger shadow
+- Box shadow: `0 30px 60px -20px rgba(0, 0, 0, 0.7)` on hover
+
+**Animations:**
+- Background blobs: 3 floating circles with `filter: blur(80px)`, `opacity: 0.15`, floating via `@keyframes float` (20s cycle)
+- Pulsing CTA: radial gradient pulse inside CTA card (4s infinite)
+
+**Components:**
+- Highlighted text: accent color with subtle background `rgba(56, 189, 248, 0.1)`, rounded 6px, hover brightens
+- Buttons: rounded-full (`999px`), gradient background (accent to indigo), shadow on hover, lift effect
+- Lists: custom marker colors (accent), proper spacing
+- CTA section: gradient background with pulse effect and call-to-action button
+
+**Responsive:**
+- Container max-width: `1000px` (main), `900px` (cards)
+- Mobile breakpoint: `768px` – reduces headings, padding, card padding
+- Padding: `2.5rem` default, `2rem` on mobile, header `6rem` top
+
+**Accessibility:**
+- Focus states: `outline: 2px solid var(--accent); outline-offset: 3px`
+- Selection color: accent on dark background
+- Semantic HTML structure
+- Sufficient color contrast (checked via WCAG)
+
+**Usage Guidelines:**
+- Apply to: landing pages, product showcases, portfolio sites, presentation pages
+- Avoid: content-heavy docs, admin panels (reserve for marketing/overview pages)
+- Favicon: can embed SVG data URL or use emoji for prototypes
+- Customization: tweak accent hue per brand; keep dark background for premium feel
+
+**Implementation Files:**
+- Example: `gym-workout-health-longevity/index.html`
+- Reuse by copying CSS variables and component classes as a starting template
+
+---
+
 ## Lessons Learned
 
 ### Data Privacy (2026-02-11)
