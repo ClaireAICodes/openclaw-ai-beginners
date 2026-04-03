@@ -1,0 +1,119 @@
+# Cryptocurrency Market Report - 2026-04-02
+
+---
+
+## Executive Summary
+
+**Market Verdict: HOLD**
+**Confidence Score: 4.85/10**
+
+### Key Highlights
+
+- **Global Market Cap:** $2,374,612,397,594
+- **24h Volume:** $43,374,526,511
+- **BTC Dominance:** 56.1%
+- **ETH Dominance:** 10.4%
+- **Stablecoin Dominance:** 11.0%
+- **Fear & Greed:** 12 (Extreme Fear)
+- **BTC Hash Rate 24h:** +0.00%
+- **Assets analyzed:** BTC, ETH, ADA, SOL, AVAX, DOT, LINK, UNI, AAVE, MKR
+
+## Score Breakdown
+
+| Dimension | Score | Weight | Weighted |
+|-----------|-------|--------|----------|
+| Fundamentals | 4.65/10 | 30% | 1.40 |
+| Technicals | 4.72/10 | 25% | 1.18 |
+| Sentiment | 2.61/10 | 20% | 0.52 |
+| Risks_adjusted | 7.0/10 | 25% | 1.75 |
+| **Total** | | **100%** | **4.85** |
+
+## Asset Analysis
+
+| Symbol | Name | Price | 24h Change |
+|--------|------|-------|------------|
+| BTC | Bitcoin | $66,602.00 | -2.67% |
+| ETH | Ethereum | $2,049.67 | -3.47% |
+| SOL | Solana | $79.17 | -5.81% |
+| ADA | Cardano | $0.24 | -4.49% |
+| LINK | Chainlink | $8.54 | -4.26% |
+| AVAX | Avalanche | $8.70 | -4.22% |
+| UNI | Uniswap | $3.31 | -7.99% |
+| DOT | Polkadot | $1.22 | -4.81% |
+| AAVE | Aave | $94.42 | -4.84% |
+| MKR | Maker | $1,706.86 | -2.69% |
+
+## BTC Technical Indicators (Daily)
+
+- **RSI:** 42.9
+- **SMA30:** $69,525.94
+- **WMA200:** $59,348.87
+- **Trend:** < SMA30
+- **24h Change:** -2.67%
+- **24h Volume:** $43,374,526,511
+- **Volume MA(30):** $43,700,464,140
+- **PPO:** -1.25%
+- **PPO Signal:** -0.88%
+- **PPO Histogram:** -0.37%
+**Analysis:** RSI is neutral; PPO below signal indicates bearish momentum; Price below 30‑day SMA confirms downtrend.
+
+## Fundamentals Overview
+
+- **BTC Hash Rate:** 957,728,654 TH/s (24h change: +0.00%)
+- **Last BTC Halving:** 2024-04-20 (712 days ago)
+- **Next BTC Halving (Estimated):** 2028-04-12 (estimated) — in 740 days
+- **Halving Cycle Phase:** Late Post-Halving (Distribution/Bear Risk)
+- **Miner Revenue (24h):** $32,625,724 (24h change: +3.13%) (fees: $1,615, 0.0% of revenue)
+- **Network Difficulty:** 133,793,147,307,540 (2w change: +0.00%)
+- *More detailed on-chain metrics require premium data sources*
+
+## Sentiment Analysis
+
+- **Fear & Greed Index:** 12 (Extreme Fear)
+- **News Sentiment Score:** -0.053 (-1 to +1)
+  - Positive keywords: rally, surge, gain, up, rise
+  - Negative keywords: crash, regulation, sec, hack, scam
+
+## Top Headlines
+
+- [Oil trader takes $17 million hit as tokenized crude rivals bitcoin liquidations](https://www.coindesk.com/markets/2026/04/02/oil-trader-takes-usd17m-hit-as-tokenized-crude-rivals-bitcoin-liquidations) — feeds.feedburner.com
+- [Bitcoin, ether, solana slide further as Trump threatens to hit Iran 'extremely hard'](https://www.coindesk.com/markets/2026/04/02/bitcoin-ether-solana-slide-further-as-trump-threatens-to-hit-iran-extremely-hard) — feeds.feedburner.com
+- [Citadel-backed EDX Markets applies for U.S. trust charter to expand institutional crypto services](https://www.coindesk.com/markets/2026/04/01/citadel-backed-edx-markets-applies-for-u-s-trust-charter-to-expand-institutional-crypto-services) — feeds.feedburner.com
+- [Solana DeFi platform Drift confirms 'active attack' as $200M+ leaves platform](https://www.coindesk.com/tech/2026/04/01/solana-defi-platform-drift-investigates-suspicious-activity-tells-users-to-halt-deposits) — feeds.feedburner.com
+- [Galaxy Digital's testnet suffers hack but no client funds or information were compromised](https://www.coindesk.com/tech/2026/04/01/galaxy-digital-suffers-hack-but-no-client-funds-or-information-were-compromised) — feeds.feedburner.com
+
+## Risk Assessment
+
+**Overall Risk Score:** 0.300 / 1.0
+**Adjusted Score (inverted):** 7.0 / 10.0
+
+**Factor Breakdown:**
+- Multiple negative keywords: +0.10 (count=5)
+- Regulatory concerns: +0.20 (keywords detected)
+
+**Total Risk Factors:** 2 contributing 0.300 points.
+
+**Context:**
+- News sentiment score: -0.053 (-1 to +1)
+- BTC dominance: 56.1%
+- BTC price vs WMA200: +12.2%
+
+## Verdict Rationale
+
+The **HOLD** recommendation is based on a weighted composite score of **4.85/10**.
+
+- **Technical factors:** RSI neutral (42.94); Price < SMA30; PPO histogram -0.37%; Extreme fear (contrarian).
+- **Sentiment:** Fear & Greed at 12 (Extreme Fear).
+- **News tone:** Neutral.
+- **Risk factors:** 2 identified: Multiple negative keywords; Regulatory concerns.
+
+## Methodology Notes
+
+- Data sources: CoinGecko API, Alternative.me, Blockchair, RSS news feeds.
+- Technical indicators: RSI (14-day), 30-day SMA, PPO (12/26/9), 30-day Volume MA.
+- Technical score: weighted combination of RSI, trend, PPO histogram, volume confirmation, and Fear & Greed (0-10 scale).
+- Sentiment: Simple keyword-based analysis of recent news headlines.
+- Risk assessment: Aggregates negative news keywords, regulatory mentions, BTC dominance.
+- **Not financial advice** - for informational purposes only.
+
+*Generated by Crypto Reporter v1.0 on 2026-04-02 06:00 UTC*
