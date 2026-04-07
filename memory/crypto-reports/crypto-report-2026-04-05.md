@@ -1,0 +1,120 @@
+# Cryptocurrency Market Report - 2026-04-05
+
+---
+
+## Executive Summary
+
+**Market Verdict: HOLD**
+**Confidence Score: 4.13/10**
+
+### Key Highlights
+
+- **Global Market Cap:** $2,386,377,176,332
+- **24h Volume:** $15,040,108,899
+- **BTC Dominance:** 56.2%
+- **ETH Dominance:** 10.4%
+- **Stablecoin Dominance:** 11.0%
+- **Fear & Greed:** 12 (Extreme Fear)
+- **BTC Hash Rate 24h:** +0.00%
+- **Assets analyzed:** BTC, ETH, ADA, SOL, AVAX, DOT, LINK, UNI, AAVE, MKR
+
+## Score Breakdown
+
+| Dimension | Score | Weight | Weighted |
+|-----------|-------|--------|----------|
+| Fundamentals | 4.65/10 | 30% | 1.40 |
+| Technicals | 4.36/10 | 25% | 1.09 |
+| Sentiment | 1.97/10 | 20% | 0.39 |
+| Risks_adjusted | 5.0/10 | 25% | 1.25 |
+| **Total** | | **100%** | **4.13** |
+
+## Asset Analysis
+
+| Symbol | Name | Price | 24h Change |
+|--------|------|-------|------------|
+| BTC | Bitcoin | $66,900.00 | -0.02% |
+| ETH | Ethereum | $2,047.95 | -0.26% |
+| SOL | Solana | $80.25 | +0.10% |
+| ADA | Cardano | $0.24 | -0.20% |
+| LINK | Chainlink | $8.61 | -0.47% |
+| AVAX | Avalanche | $8.88 | +0.11% |
+| DOT | Polkadot | $1.23 | -0.69% |
+| UNI | Uniswap | $3.09 | -2.11% |
+| AAVE | Aave | $93.55 | -1.13% |
+| MKR | Maker | $1,722.67 | -1.05% |
+
+## BTC Technical Indicators (Daily)
+
+- **RSI:** 43.9
+- **SMA30:** $69,184.07
+- **WMA200:** $59,428.90
+- **Trend:** < SMA30
+- **24h Change:** -0.02%
+- **24h Volume:** $15,040,108,899
+- **Volume MA(30):** $39,850,498,535
+- **PPO:** -1.26%
+- **PPO Signal:** -1.07%
+- **PPO Histogram:** -0.19%
+**Analysis:** RSI is neutral; PPO below signal indicates bearish momentum; Price below 30‑day SMA confirms downtrend.
+
+## Fundamentals Overview
+
+- **BTC Hash Rate:** 994,763,618 TH/s (24h change: +0.00%)
+- **Last BTC Halving:** 2024-04-20 (715 days ago)
+- **Next BTC Halving (Estimated):** 2028-04-12 (estimated) — in 737 days
+- **Halving Cycle Phase:** Late Post-Halving (Distribution/Bear Risk)
+- **Miner Revenue (24h):** $27,601,434 (24h change: +0.01%) (fees: $646, 0.0% of revenue)
+- **Network Difficulty:** 138,966,872,071,210 (2w change: +0.00%)
+- *More detailed on-chain metrics require premium data sources*
+
+## Sentiment Analysis
+
+- **Fear & Greed Index:** 12 (Extreme Fear)
+- **News Sentiment Score:** -0.375 (-1 to +1)
+  - Positive keywords: up, launch, strong, high, institutional
+  - Negative keywords: bearish, fall, down, loss, regulation
+
+## Top Headlines
+
+- [Bitcoin's $1.3 trillion security race: Key initiatives aimed at quantum-proofing the world's largest blockchain](https://www.coindesk.com/tech/2026/04/04/bitcoin-s-usd1-3-trillion-security-race-key-initiatives-aimed-at-quantum-proofing-the-world-s-largest-blockchain) — feeds.feedburner.com
+- [Bitcoin tends to outperform gold and stocks after global shocks, Mercado Bitcoin finds](https://www.coindesk.com/markets/2026/03/30/bitcoin-tends-to-outperform-gold-and-stocks-after-global-shocks-mercado-bitcoin-finds) — feeds.feedburner.com
+- [Ex-UK Chancellor backs bitcoin as alternative to failing systems](https://www.coindesk.com/markets/2026/04/03/ex-uk-chancellor-backs-bitcoin-as-alternative-to-failing-systems) — feeds.feedburner.com
+- [Digital asset treasuries must now earn their keep](https://www.coindesk.com/opinion/2026/04/04/digital-asset-treasuries-must-now-earn-their-keep) — feeds.feedburner.com
+- [Traders are the big winners as 24/7 stocks will finally end the after-hours price 'manipulation'](https://www.coindesk.com/markets/2026/04/04/traders-are-the-big-winners-as-24-7-stocks-will-finally-end-the-after-hours-price-manipulation) — feeds.feedburner.com
+
+## Risk Assessment
+
+**Overall Risk Score:** 0.500 / 1.0
+**Adjusted Score (inverted):** 5.0 / 10.0
+
+**Factor Breakdown:**
+- Negative news sentiment: +0.20 (sent_score=-0.375)
+- Multiple negative keywords: +0.10 (count=5)
+- Regulatory concerns: +0.20 (keywords detected)
+
+**Total Risk Factors:** 3 contributing 0.500 points.
+
+**Context:**
+- News sentiment score: -0.375 (-1 to +1)
+- BTC dominance: 56.2%
+- BTC price vs WMA200: +12.6%
+
+## Verdict Rationale
+
+The **HOLD** recommendation is based on a weighted composite score of **4.13/10**.
+
+- **Technical factors:** RSI neutral (43.88); Price < SMA30; PPO histogram -0.19%; Volume 0.4× MA (weak conviction); Extreme fear (contrarian).
+- **Sentiment:** Fear & Greed at 12 (Extreme Fear).
+- **News tone:** Negative.
+- **Risk factors:** 3 identified: Negative news sentiment; Multiple negative keywords; Regulatory concerns.
+
+## Methodology Notes
+
+- Data sources: CoinGecko API, Alternative.me, Blockchair, RSS news feeds.
+- Technical indicators: RSI (14-day), 30-day SMA, PPO (12/26/9), 30-day Volume MA.
+- Technical score: weighted combination of RSI, trend, PPO histogram, volume confirmation, and Fear & Greed (0-10 scale).
+- Sentiment: Simple keyword-based analysis of recent news headlines.
+- Risk assessment: Aggregates negative news keywords, regulatory mentions, BTC dominance.
+- **Not financial advice** - for informational purposes only.
+
+*Generated by Crypto Reporter v1.0 on 2026-04-05 06:00 UTC*
