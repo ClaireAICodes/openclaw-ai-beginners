@@ -1,1 +1,1 @@
-crypto-report-2026-04-06.md
+crypto-report-2026-04-07.md
